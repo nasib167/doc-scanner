@@ -176,6 +176,20 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .viewer-stage{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:center;justify-content:center;touch-action:pan-x pan-y pinch-zoom}
 .viewer-stage img{max-width:100%;max-height:100%;object-fit:contain;display:block;background:#fff}
 .viewer-stage img.zoom{max-width:none;max-height:none;width:220%}
+.viewer .vbar{position:relative;z-index:2;background:#0B0F14;color:#fff;box-shadow:none}
+.viewer .vbar .btn{background:rgba(255,255,255,.14);color:#fff}
+.viewer .vbar .btn.primary{background:var(--accent);color:#fff}
+.viewer-stage{position:relative;z-index:1}
+.sigs{display:flex;gap:10px;overflow-x:auto;padding:10px 12px;background:var(--surface);box-shadow:0 -1px 0 var(--line);flex:none;scrollbar-width:none;min-height:82px;align-items:center}
+.sigs::-webkit-scrollbar{display:none}
+.sig{flex:none;width:118px;height:62px;border-radius:10px;background:#fff;border:2.5px solid transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sig img{max-width:92%;max-height:84%;display:block}
+.sig.on{border-color:var(--accent)}
+.sigs .note{margin:0;padding:0 4px}
+.sigpad{position:relative;height:230px;background:#fff;border-radius:12px;border:1px solid var(--line);overflow:hidden;touch-action:none}
+.sigpad canvas{width:100%;height:100%;display:block;touch-action:none}
+.sigline{position:absolute;left:24px;right:24px;bottom:52px;border-top:2px dashed #cbd5e1;pointer-events:none}
+button,.btn{touch-action:manipulation}
 @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition:none !important}}
 </style>
 </head>
@@ -193,11 +207,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   <div id="empty" class="empty">
     <svg class="art" viewBox="0 0 120 120"><rect x="30" y="18" width="60" height="84" rx="4" fill="#fff" stroke="none" opacity=".95"/><rect x="30" y="18" width="60" height="84" rx="4" opacity=".55"/><path d="M42 40h36M42 52h36M42 64h24" stroke-width="3" opacity=".55"/><path d="M14 30V18a4 4 0 0 1 4-4h12M90 14h12a4 4 0 0 1 4 4v12M106 90v12a4 4 0 0 1-4 4H90M30 106H18a4 4 0 0 1-4-4V90" stroke-width="3"/></svg>
     <h2>Scan your first page</h2>
-    <p>Edges are found automatically, shadows are removed, and pages become a clean PDF. Nothing leaves your phone. Earlier scans are under Docs.</p>
+    <p>Edges are found automatically, shadows are removed, and pages become a clean PDF. Nothing leaves your phone.</p>
     <div class="steps"><span class="step"><b>1</b>Take a photo</span><span class="step"><b>2</b>Check corners</span><span class="step"><b>3</b>Export PDF</span></div>
+    <p style="margin-top:16px;font-size:13.5px">Import photos: pick many at once and every page is scanned automatically. Earlier scans are under Docs.</p>
   </div>
   <footer class="bar bottom dock">
-    <button class="btn stack" id="btn-photos"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5L7 19"/></svg>Photos</button>
+    <button class="btn stack" id="btn-photos"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5L7 19"/></svg>Import photos</button>
     <button class="fab" id="btn-camera" aria-label="Take a photo"><svg viewBox="0 0 24 24"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.6-2.4a1 1 0 0 1 .8-.6h3.2a1 1 0 0 1 .8.6L16 7h2.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="13" r="3.6"/></svg></button>
     <button class="btn stack" id="btn-live"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="12" rx="2.5"/><path d="M17 10l4-2.2v8.4L17 14z"/></svg>Live scan</button>
   </footer>
@@ -276,6 +291,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <button data-act="rotate"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></span>Rotate right</button>
     <button data-act="up"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>Move earlier</button>
     <button data-act="down"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span>Move later</button>
+    <button data-act="sign"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 20c4-1 5-5 7-8s3-5 4-4-1 6 1 6 3-3 4-3 1 2 2 2"/><path d="M3 21h18"/></svg></span>Add signature</button>
     <button data-act="jpg"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5L7 19"/></svg></span>Save to Photos (JPG)</button>
     <button data-act="delete" class="danger"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></span>Delete page</button>
   </div>
@@ -320,22 +336,55 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
 <!-- Full-screen page viewer -->
 <div id="viewer" class="viewer hidden">
-  <header class="bar top overlay-bar">
+  <header class="bar top vbar">
     <button class="btn pill" id="viewer-close">Close</button>
     <div class="bar-title" id="viewer-title">Page</div>
     <button class="btn pill" id="viewer-enhance">Enhance</button>
   </header>
   <div class="viewer-stage" id="viewer-stage"><img id="viewer-img" alt=""></div>
-  <footer class="bar bottom overlay-bar" style="justify-content:center;gap:24px">
+  <footer class="bar bottom vbar" style="justify-content:center;gap:12px">
     <button class="btn pill" id="viewer-prev">Previous</button>
+    <button class="btn pill primary" id="viewer-sign">Sign</button>
     <button class="btn pill" id="viewer-next">Next</button>
   </footer>
 </div>
+
+<!-- Sign (place a signature on a page) -->
+<section id="view-sign" class="view hidden">
+  <header class="bar top">
+    <button class="btn quiet" id="sign-cancel">Cancel</button>
+    <div class="bar-title">Add signature</div>
+    <button class="btn primary pill" id="sign-apply">Apply</button>
+  </header>
+  <div class="stage" id="sign-stage"><canvas id="sign-canvas"></canvas><div class="hint" id="sign-hint">Drag to move. Pinch or use the slider to resize.</div></div>
+  <div class="sigs" id="sig-list"></div>
+  <div class="sliders" style="max-height:none;padding-top:0">
+    <div class="slider-row"><span>Size</span><input type="range" min="8" max="90" id="sign-size"><span class="val" id="sign-size-val">30</span></div>
+  </div>
+  <footer class="bar bottom">
+    <button class="btn" id="sig-new"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New signature</button>
+    <span class="spacer"></span>
+    <button class="btn danger" id="sig-delete">Delete this signature</button>
+  </footer>
+</section>
+
+<!-- Draw a signature -->
+<div id="modal-sig" class="modal hidden"><div class="sheet"><div class="grabber"></div><h3>Draw your signature</h3>
+  <p class="note" style="margin:0 0 10px">Use your finger. Turn the phone sideways for more room.</p>
+  <div class="sigpad"><canvas id="sig-pad"></canvas><div class="sigline"></div></div>
+  <div class="stack">
+    <button class="btn primary block" id="sigpad-save">Save signature</button>
+    <div style="display:flex;gap:10px"><button class="btn block" id="sigpad-clear">Clear</button><button class="btn block" id="sigpad-photo">Use a photo</button></div>
+    <button class="btn block" id="sigpad-cancel">Cancel</button>
+  </div>
+  <p class="note">"Use a photo": sign on white paper, photograph it, and the background is removed automatically.</p>
+</div></div>
 
 <div id="overlay" class="overlay hidden"><div class="spinner"></div><div id="overlay-text">Working…</div></div>
 <div id="toast" class="toast hidden"></div>
 <input type="file" id="file-camera" accept="image/*" capture="environment" hidden>
 <input type="file" id="file-photos" accept="image/*" multiple hidden>
+<input type="file" id="file-sig" accept="image/*" hidden>
 <script id="ip-src">
 /* Doc Scanner image engine. Pure JS on typed arrays, no DOM, so it can be tested in Node. */
 const IP = (function () {
@@ -582,41 +631,50 @@ const IP = (function () {
   /* fraction of the quad outline lying on strong edges */
   function scoreQuad(q, mag, w, h, tEdge) {
     if (!validQuad(q, w, h)) return -1;
-    let hit = 0, tot = 0;
+    let hit = 0, tot = 0, borderSides = 0;
     for (let i = 0; i < 4; i++) {
       const p = q[i], r = q[(i + 1) % 4];
       const len = Math.hypot(r.x - p.x, r.y - p.y), N = Math.max(8, Math.round(len / 4));
+      let onBorder = 0;
       for (let k = 0; k < N; k++) {
         const t = (k + 0.5) / N;
         let x = Math.round(p.x + (r.x - p.x) * t), y = Math.round(p.y + (r.y - p.y) * t);
-        x = Math.max(2, Math.min(w - 3, x)); y = Math.max(2, Math.min(h - 3, y));
+        if (x < 2 || y < 2 || x > w - 3 || y > h - 3) { onBorder++; continue; }
         let m = 0;
         for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const v = mag[(y + dy) * w + (x + dx)]; if (v > m) m = v; }
         tot++; if (m > tEdge * 0.7) hit++;
       }
+      if (onBorder > 0.8 * N) borderSides++;
     }
+    if (!tot) return -1;
     const support = hit / tot, areaF = quadArea(q) / (w * h);
-    return support * (0.8 + 0.2 * areaF);
+    return support * (0.8 + 0.2 * areaF) * (1 - 0.04 * borderSides);
   }
 
-  /* mean brightness just inside minus just outside the outline: paper should be the bright side */
+  /* brightness just inside minus just outside the outline, at a near and a far distance; the smaller of the two
+     counts, so a shadow band's outer edge (dark inside, bright outside near it) and an internal print line
+     (paper again beyond it) both lose. Paper should be the bright side. */
   function edgeContrast(q, g, w, h) {
-    const band = Math.max(3, 0.02 * Math.max(w, h));
+    const far = Math.max(3, 0.02 * Math.max(w, h)), near = Math.max(2, 0.008 * Math.max(w, h));
     const cx = (q[0].x + q[1].x + q[2].x + q[3].x) / 4, cy = (q[0].y + q[1].y + q[2].y + q[3].y) / 4;
-    let inn = 0, out = 0, cnt = 0;
+    let total = 0, sides = 0;
     for (let i = 0; i < 4; i++) {
       const p = q[i], r = q[(i + 1) % 4], dx = r.x - p.x, dy = r.y - p.y, len = Math.hypot(dx, dy) || 1;
       let nx = -dy / len, ny = dx / len;
       const mx = (p.x + r.x) / 2, my = (p.y + r.y) / 2;
       if ((mx - cx) * nx + (my - cy) * ny < 0) { nx = -nx; ny = -ny; }
+      let cN = 0, cF = 0, n = 0;
       for (let k = 0; k < 16; k++) {
         const t = 0.1 + 0.8 * k / 15, sx = p.x + dx * t, sy = p.y + dy * t;
-        const xi = Math.round(sx - nx * band), yi = Math.round(sy - ny * band), xo = Math.round(sx + nx * band), yo = Math.round(sy + ny * band);
-        if (xi < 0 || yi < 0 || xi >= w || yi >= h || xo < 0 || yo < 0 || xo >= w || yo >= h) continue;
-        inn += g[yi * w + xi]; out += g[yo * w + xo]; cnt++;
+        const pts = [[sx - nx * near, sy - ny * near], [sx + nx * near, sy + ny * near], [sx - nx * far, sy - ny * far], [sx + nx * far, sy + ny * far]];
+        if (pts.some(([x, y]) => x < 0 || y < 0 || x >= w || y >= h)) continue;
+        const v = pts.map(([x, y]) => g[Math.round(y) * w + Math.round(x)]);
+        cN += v[0] - v[1]; cF += v[2] - v[3]; n++;
       }
+      if (!n) continue; /* side on the image border: no opinion */
+      total += Math.min(cN / n, cF / n); sides++;
     }
-    return cnt ? (inn - out) / cnt : 0;
+    return sides ? total / sides : 0;
   }
 
   function fullScore(q, mag, g, w, h, tEdge, prior) {
@@ -726,6 +784,114 @@ const IP = (function () {
     return out;
   }
 
+  /* Straight-line detector: gradient-oriented Hough transform, then the best-scoring quad from two pairs of lines.
+     Works when paper and table have similar brightness (edges still exist) and when the page runs off the frame
+     (the image borders are offered as extra lines). */
+  function detectByLines(gb, mag, tEdge, w, h) {
+    const diag = Math.ceil(Math.hypot(w, h)), NT = 180, NR = 2 * diag + 1, acc = new Float32Array(NT * NR);
+    const cosT = new Float32Array(NT), sinT = new Float32Array(NT);
+    for (let t = 0; t < NT; t++) { const a = t * Math.PI / 180; cosT[t] = Math.cos(a); sinT[t] = Math.sin(a); }
+    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+      const i = y * w + x, m = mag[i]; if (m < tEdge) continue;
+      const gx = (gb[i - w + 1] + 2 * gb[i + 1] + gb[i + w + 1]) - (gb[i - w - 1] + 2 * gb[i - 1] + gb[i + w - 1]);
+      const gy = (gb[i + w - 1] + 2 * gb[i + w] + gb[i + w + 1]) - (gb[i - w - 1] + 2 * gb[i - w] + gb[i - w + 1]);
+      let ang = Math.atan2(gy, gx) * 180 / Math.PI; if (ang < 0) ang += 180; if (ang >= 180) ang -= 180;
+      const t0 = Math.round(ang), wgt = Math.min(1, m / (3 * tEdge));
+      for (let dt = -3; dt <= 3; dt++) {
+        const t = ((t0 + dt) % 180 + 180) % 180;
+        const r = Math.round(x * cosT[t] + y * sinT[t]) + diag;
+        acc[t * NR + r] += wgt;
+      }
+    }
+    /* peaks: local maxima in a (+-5 deg, +-8 px) window */
+    const minVotes = 0.12 * Math.min(w, h), peaks = [];
+    for (let t = 0; t < NT; t++) for (let r = 3; r < NR - 3; r++) {
+      const v = acc[t * NR + r]; if (v < minVotes) continue;
+      let isMax = true;
+      for (let dt = -3; dt <= 3 && isMax; dt++) {
+        const tt = ((t + dt) % 180 + 180) % 180, flip = (t + dt < 0 || t + dt >= 180);
+        for (let dr = -3; dr <= 3; dr++) {
+          const rr = flip ? (2 * diag - (r + dr)) : r + dr; if (rr < 0 || rr >= NR) continue;
+          const u = acc[tt * NR + rr]; if (u > v || (u === v && (dt < 0 || (dt === 0 && dr < 0)))) { isMax = false; break; }
+        }
+      }
+      if (isMax) peaks.push({ t, rho: r - diag, v });
+    }
+    peaks.sort((a, b) => b.v - a.v);
+    if (!peaks.length) return [];
+    /* verify each peak: fraction of positions along the line (inside the image) with an edge pixel within 2 px */
+    const verified = [];
+    for (const p of peaks.slice(0, 60)) {
+      const a = cosT[p.t], b = sinT[p.t], c = -p.rho;
+      const pts = [];
+      if (Math.abs(b) > Math.abs(a)) { for (let x = 0; x < w; x += 3) { const y = Math.round((-c - a * x) / b); if (y >= 2 && y <= h - 3) pts.push([x, y]); } }
+      else { for (let y = 0; y < h; y += 3) { const x = Math.round((-c - b * y) / a); if (x >= 2 && x <= w - 3) pts.push([x, y]); } }
+      if (pts.length < 8) continue;
+      let hit = 0;
+      for (const [x, y] of pts) { let m = 0; for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const v = mag[(y + dy) * w + (x + dx)]; if (v > m) m = v; } if (m > tEdge) hit++; }
+      const cov = hit / pts.length;
+      if (cov >= 0.35) verified.push({ a, b, c, t: p.t, v: p.v, cov, len: pts.length });
+    }
+    if (!verified.length) return [];
+    /* two orientation families around the dominant direction; keep the OUTERMOST lines of each family (page edges
+       are the extreme ones, text lines are inside) plus a few strongest */
+    const t0 = verified[0].t, cx = w / 2, cy = h / 2;
+    const dAng0 = (a, b) => { let d = Math.abs(a - b) % 180; return d > 90 ? 180 - d : d; };
+    const famA = verified.filter((L) => dAng0(L.t, t0) <= 25), famB = verified.filter((L) => dAng0(L.t, t0 + 90) <= 25);
+    const pick = (fam) => {
+      const withD = fam.map((L) => ({ L, d: L.a * cx + L.b * cy + L.c })).sort((x, y) => x.d - y.d);
+      const out = new Set();
+      for (const x of withD.slice(0, 4)) out.add(x.L);
+      for (const x of withD.slice(-4)) out.add(x.L);
+      for (const L of fam.slice(0, 3)) out.add(L);
+      return Array.from(out);
+    };
+    /* snap each chosen line to the nearest gradient ridge (Hough lines are quantized to 1 deg / 1 px) */
+    const snap = (L) => {
+      const R = 4, pts = [], vertical = Math.abs(L.b) <= Math.abs(L.a);
+      const nx = L.a, ny = L.b; /* unit normal */
+      for (let k = 0; k < 40; k++) {
+        let x0, y0;
+        if (vertical) { y0 = (k + 0.5) / 40 * h; x0 = (-L.c - L.b * y0) / L.a; } else { x0 = (k + 0.5) / 40 * w; y0 = (-L.c - L.a * x0) / L.b; }
+        if (x0 < 3 || y0 < 3 || x0 > w - 4 || y0 > h - 4) continue;
+        let bestD = null, bestDist = Infinity, prev = -1, cur = -1, next = -1;
+        for (let d = -R; d <= R + 1; d++) {
+          const x = Math.round(x0 + nx * d), y = Math.round(y0 + ny * d);
+          next = (x < 1 || y < 1 || x >= w - 1 || y >= h - 1) ? 0 : mag[y * w + x];
+          if (d >= -R + 1) { const dd = d - 1; if (cur >= tEdge * 0.7 && cur >= prev && cur >= next && Math.abs(dd) < bestDist) { bestDist = Math.abs(dd); bestD = dd; } }
+          prev = cur; cur = next;
+        }
+        if (bestD !== null) pts.push([x0 + nx * bestD, y0 + ny * bestD]);
+      }
+      if (pts.length < 8) return L;
+      let F = fitLine(pts);
+      const keep = pts.filter((p) => Math.abs(F.a * p[0] + F.b * p[1] + F.c) < 1.5);
+      if (keep.length >= 6) F = fitLine(keep);
+      /* keep the normal pointing the same way as the original */
+      if (F.a * L.a + F.b * L.b < 0) { F.a = -F.a; F.b = -F.b; F.c = -F.c; }
+      return { a: F.a, b: F.b, c: F.c, t: L.t, border: L.border };
+    };
+    const A = pick(famA).map(snap), B = pick(famB).map(snap);
+    if (typeof globalThis !== 'undefined' && globalThis.__DS_DEBUG) globalThis.__DS_DEBUG.lines = { verified, famA, famB, lines: A.concat(B), t0 };
+    /* image borders as extra candidates in both families: x = 0, x = w, y = 0, y = h */
+    const borders = [{ a: 1, b: 0, c: 0, t: 0, border: true }, { a: 1, b: 0, c: -(w - 1), t: 0, border: true }, { a: 0, b: 1, c: 0, t: 90, border: true }, { a: 0, b: 1, c: -(h - 1), t: 90, border: true }];
+    for (const bl of borders) { if (dAng0(bl.t, t0) <= 25) A.push(bl); else if (dAng0(bl.t, t0 + 90) <= 25) B.push(bl); }
+    const sep = 0.15 * Math.min(w, h), out = [];
+    const distBetween = (L1, L2) => Math.abs(L1.c - L2.c); /* unit normals, near-parallel */
+    for (let i = 0; i < A.length; i++) for (let j = i + 1; j < A.length; j++) {
+      if (dAng0(A[i].t, A[j].t) > 25 || distBetween(A[i], A[j]) < sep) continue;
+      for (let k = 0; k < B.length; k++) for (let l = k + 1; l < B.length; l++) {
+        if (dAng0(B[k].t, B[l].t) > 25 || distBetween(B[k], B[l]) < sep) continue;
+        const P = [intersect(A[i], B[k]), intersect(B[k], A[j]), intersect(A[j], B[l]), intersect(B[l], A[i])];
+        if (P.some((p) => !p || !isFinite(p.x) || !isFinite(p.y) || p.x < -0.05 * w || p.x > 1.05 * w || p.y < -0.05 * h || p.y > 1.05 * h)) continue;
+        const q = clampQuad(orderQuad(P), w, h);
+        if (!validQuad(q, w, h)) continue;
+        out.push(q);
+      }
+    }
+    return out;
+  }
+
   function fitLine(pts) {
     let mx = 0, my = 0;
     for (const p of pts) { mx += p[0]; my += p[1]; }
@@ -814,6 +980,9 @@ const IP = (function () {
     const qa = detectByBrightness(rgba, g, w, h); if (qa) cands.push({ q: qa, m: 'paper' });
     const qb = detectByEdges(mag, tEdge, w, h); if (qb) cands.push({ q: qb, m: 'edges' });
     for (const qc of detectByOutline(mag, tEdge, w, h)) cands.push({ q: qc, m: 'outline' });
+    const lineQuads = detectByLines(gb, mag, tEdge, w, h).map((q) => ({ q, s: scoreQuad(q, mag, w, h, tEdge) })).filter((x) => x.s > 0.35);
+    lineQuads.sort((a, b) => b.s - a.s);
+    for (const x of lineQuads.slice(0, 6)) cands.push({ q: x.q, m: 'lines' });
     let best = null, bestScore = -1;
     for (const c of cands) {
       const s = fullScore(c.q, mag, g, w, h, tEdge, c.m === 'paper' ? 1.05 : 1);
@@ -1274,7 +1443,7 @@ if (typeof module !== 'undefined') module.exports = IP;
   }
   function overlay(text) { $('overlay-text').textContent = text || 'Working…'; $('overlay').classList.remove('hidden'); }
   function hideOverlay() { $('overlay').classList.add('hidden'); }
-  function showView(id) { ['view-pages', 'view-crop', 'view-filter', 'view-live'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
+  function showView(id) { ['view-pages', 'view-crop', 'view-filter', 'view-live', 'view-sign'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
   function openModal(id) { $(id).classList.remove('hidden'); }
   function closeModal(id) { $(id).classList.add('hidden'); }
   function askConfirm(message, okLabel, danger) {
@@ -1473,7 +1642,7 @@ if (typeof module !== 'undefined') module.exports = IP;
     return inside;
   }
   async function detectOnCanvas(c) {
-    const small = scaleCanvas(c, 500), d = canvasRGBA(small);
+    const small = scaleCanvas(c, 640), d = canvasRGBA(small);
     const res = await Engine.call('detect', { rgba: d.rgba, w: d.w, h: d.h }, [d.rgba.buffer]);
     const f = c.width / small.width;
     res.quad = scaleQuad(res.quad, f);
@@ -1566,8 +1735,25 @@ if (typeof module !== 'undefined') module.exports = IP;
     const size = IP.outputSize(page.quad, page.shape, S.maxDim);
     const out = await Engine.call('warpRender', { src: o.rgba, sw: o.w, sh: o.h, quad: page.quad, dw: size.w, dh: size.h, params: fx(page.filter) });
     const c = rotateCanvas(rgbaToCanvas(out, size.w, size.h), page.rotation);
+    await drawStamps(c, page.stamps);
     page.result = { buf: await canvasToJpegBuf(c, S.jpegQ), w: c.width, h: c.height };
     page.thumb = thumbOf(c, 320);
+  }
+  /* signatures placed on the page, in relative coordinates of the (rotated) result */
+  const sigImgCache = new Map();
+  async function sigImage(dataUrl) {
+    if (sigImgCache.has(dataUrl)) return sigImgCache.get(dataUrl);
+    const img = await loadImg(dataUrl); sigImgCache.set(dataUrl, img); return img;
+  }
+  async function drawStamps(c, stamps) {
+    if (!stamps || !stamps.length) return;
+    const ctx = c.getContext('2d');
+    for (const st of stamps) {
+      try { const img = await sigImage(st.dataUrl); ctx.drawImage(img, st.x * c.width, st.y * c.height, st.w * c.width, st.h * c.height); } catch (e) { /* skip a broken stamp */ }
+    }
+  }
+  function rotateStamps(stamps) { /* 90 degrees clockwise in relative coordinates */
+    return (stamps || []).map((st) => ({ dataUrl: st.dataUrl, x: 1 - (st.y + st.h), y: st.x, w: st.h, h: st.w }));
   }
   function releasePage(page) { if (page._orig && page._orig.canvas) { page._orig.canvas.width = 0; page._orig.canvas.height = 0; } delete page._orig; delete page._detOK; }
   async function importFiles(files, allowReview) {
@@ -1839,7 +2025,10 @@ if (typeof module !== 'undefined') module.exports = IP;
     rotate(d) { this.rotation = ((this.rotation + d) % 4 + 4) % 4; this.draw(); },
     async done() {
       const page = this.page, applyAll = $('apply-all').checked;
-      page.filter = Object.assign({}, this.params); page.rotation = this.rotation;
+      page.filter = Object.assign({}, this.params);
+      let delta = ((this.rotation - (page.rotation || 0)) % 4 + 4) % 4;
+      while (delta-- > 0) page.stamps = rotateStamps(page.stamps);
+      page.rotation = this.rotation;
       overlay('Saving page…'); await nextFrame();
       try {
         await finalizePage(page); releasePage(page);
@@ -2133,6 +2322,7 @@ if (typeof module !== 'undefined') module.exports = IP;
       try {
         const c = rotateCanvas(await bufToCanvas(page.result.buf), 1);
         page.rotation = ((page.rotation || 0) + 1) % 4;
+        if (page.stamps && page.stamps.length) page.stamps = rotateStamps(page.stamps);
         page.result = { buf: await canvasToJpegBuf(c, S.jpegQ), w: c.width, h: c.height };
         page.thumb = thumbOf(c, 320);
         await persistPage(page); await persistDoc(); renderGrid();
@@ -2143,6 +2333,8 @@ if (typeof module !== 'undefined') module.exports = IP;
       if (j < 0 || j >= pages.length) return;
       [pages[i], pages[j]] = [pages[j], pages[i]];
       await persistDoc(); renderGrid();
+    } else if (act === 'sign') {
+      Sign.open(page);
     } else if (act === 'jpg') {
       await deliverFile(new Blob([page.result.buf], { type: 'image/jpeg' }), safeName(docName()) + '-page' + (i + 1) + '.jpg');
     } else if (act === 'delete') {
@@ -2168,6 +2360,169 @@ if (typeof module !== 'undefined') module.exports = IP;
     },
     close() { $('viewer').classList.add('hidden'); $('viewer-img').removeAttribute('src'); this.index = -1; },
     step(d) { const j = this.index + d; if (pages[j]) this.open(j); }
+  };
+
+  /* ---------- signatures: library, drawing pad, placement ---------- */
+  function loadSigs() { try { return JSON.parse(localStorage.getItem('ds.signatures') || '[]'); } catch (e) { return []; } }
+  function saveSigs(list) { try { localStorage.setItem('ds.signatures', JSON.stringify(list)); return true; } catch (e) { toast('Could not store the signature (storage full?)'); return false; } }
+  /* trim transparent margins and cap the size; returns {dataUrl, w, h} */
+  function packSignature(c) {
+    const ctx = c.getContext('2d'), d = ctx.getImageData(0, 0, c.width, c.height).data;
+    let x0 = c.width, y0 = c.height, x1 = -1, y1 = -1;
+    for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) { if (d[(y * c.width + x) * 4 + 3] > 20) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
+    if (x1 < 0) return null;
+    const m = 6, cw = x1 - x0 + 1 + 2 * m, ch = y1 - y0 + 1 + 2 * m, sc = Math.min(1, 900 / Math.max(cw, ch));
+    const out = makeCanvas(cw * sc, ch * sc), octx = out.getContext('2d');
+    octx.imageSmoothingEnabled = true; octx.imageSmoothingQuality = 'high';
+    octx.drawImage(c, x0 - m, y0 - m, cw, ch, 0, 0, out.width, out.height);
+    return { dataUrl: out.toDataURL('image/png'), w: out.width, h: out.height };
+  }
+  /* photo of a signature on paper -> black ink with transparent background */
+  function inkFromPhoto(img) {
+    const c = imageToCanvas(img, 1000), ctx = c.getContext('2d'), id = ctx.getImageData(0, 0, c.width, c.height), d = id.data, n = c.width * c.height;
+    const g = new Uint8ClampedArray(n); for (let i = 0, j = 0; i < n; i++, j += 4) g[i] = 0.299 * d[j] + 0.587 * d[j + 1] + 0.114 * d[j + 2];
+    const hist = IP.histogram(g), white = IP.percentile(hist, n, 0.9), T = Math.min(white - 25, 0.72 * white);
+    for (let i = 0, j = 0; i < n; i++, j += 4) { const v = g[i]; let a = (T - v) / 25 + 0.5; a = a < 0 ? 0 : a > 1 ? 1 : a; d[j] = 0; d[j + 1] = 0; d[j + 2] = 0; d[j + 3] = Math.round(255 * a); }
+    ctx.putImageData(id, 0, 0);
+    return c;
+  }
+  const SigPad = {
+    canvas: null, ctx: null, drawing: null, dirty: false, onSave: null,
+    open(onSave) {
+      this.onSave = onSave; this.canvas = $('sig-pad'); this.ctx = this.canvas.getContext('2d');
+      openModal('modal-sig');
+      requestAnimationFrame(() => this.layout());
+    },
+    layout() {
+      const dpr = window.devicePixelRatio || 1, W = this.canvas.clientWidth || 340, H = this.canvas.clientHeight || 230;
+      this.canvas.width = Math.round(W * dpr); this.canvas.height = Math.round(H * dpr);
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); this.clear();
+    },
+    clear() { this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); this.dirty = false; },
+    pos(e) { const r = this.canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; },
+    down(e) { e.preventDefault(); try { this.canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ } const p = this.pos(e); this.drawing = { id: e.pointerId, last: p, mid: p }; const ctx = this.ctx; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#111'; ctx.lineWidth = 2.6; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + 0.1, p.y); ctx.stroke(); this.dirty = true; },
+    move(e) {
+      if (!this.drawing || e.pointerId !== this.drawing.id) return;
+      e.preventDefault();
+      const p = this.pos(e), d = this.drawing, mid = { x: (d.last.x + p.x) / 2, y: (d.last.y + p.y) / 2 }, ctx = this.ctx;
+      ctx.beginPath(); ctx.moveTo(d.mid.x, d.mid.y); ctx.quadraticCurveTo(d.last.x, d.last.y, mid.x, mid.y); ctx.stroke();
+      d.last = p; d.mid = mid;
+    },
+    up(e) { if (this.drawing && e.pointerId === this.drawing.id) this.drawing = null; },
+    save() {
+      if (!this.dirty) { toast('Draw your signature first'); return; }
+      const packed = packSignature(this.canvas);
+      if (!packed) { toast('Draw your signature first'); return; }
+      this.finish(packed);
+    },
+    async fromPhoto(file) {
+      overlay('Reading signature…'); await nextFrame();
+      try { const img = await blobToImage(file); const packed = packSignature(inkFromPhoto(img)); hideOverlay(); if (!packed) { toast('No dark ink found in that photo'); return; } this.finish(packed); }
+      catch (e) { hideOverlay(); toast('Could not read that photo'); }
+    },
+    finish(packed) {
+      const list = loadSigs(), sig = Object.assign({ id: uid(), createdAt: now() }, packed);
+      list.unshift(sig); if (list.length > 8) list.length = 8;
+      if (!saveSigs(list)) return;
+      closeModal('modal-sig');
+      if (this.onSave) this.onSave(sig);
+    }
+  };
+  const Sign = {
+    page: null, img: null, sig: null, rect: null, canvas: null, ctx: null, W: 0, H: 0, scale: 1, ox: 0, oy: 0, ptrs: new Map(), pinch: null,
+    async open(page) {
+      this.page = page; this.canvas = $('sign-canvas'); this.ctx = this.canvas.getContext('2d'); this.ptrs.clear(); this.pinch = null;
+      overlay('Loading…'); await nextFrame();
+      try { this.img = await bufToCanvas(page.result.buf); } catch (e) { hideOverlay(); toast('Could not load the page'); return; }
+      hideOverlay();
+      showView('view-sign');
+      const sigs = loadSigs();
+      this.sig = sigs[0] || null;
+      this.rect = null;
+      this.renderList();
+      this.layout();
+      if (!this.sig) SigPad.open((sig) => { this.sig = sig; this.rect = null; this.renderList(); this.layout(); });
+    },
+    renderList() {
+      const list = $('sig-list'); list.innerHTML = '';
+      const sigs = loadSigs();
+      if (!sigs.length) { const p = document.createElement('p'); p.className = 'note'; p.textContent = 'No signature yet. Tap New signature.'; list.appendChild(p); }
+      for (const sg of sigs) {
+        const b = document.createElement('button'); b.className = 'sig' + (this.sig && sg.id === this.sig.id ? ' on' : '');
+        const im = document.createElement('img'); im.src = sg.dataUrl; im.alt = 'Signature'; b.appendChild(im);
+        b.addEventListener('click', () => { this.sig = sg; this.defaultRect(); this.renderList(); this.draw(); });
+        list.appendChild(b);
+      }
+      $('sig-delete').disabled = !this.sig;
+    },
+    defaultRect() {
+      const iw = this.img.width, ih = this.img.height, sig = this.sig;
+      const w = Math.round(iw * 0.34), h = Math.round(w * sig.h / sig.w);
+      this.rect = { x: Math.round(iw * 0.55), y: Math.round(ih * 0.78 - h / 2), w, h };
+      this.clampRect(); this.syncSlider();
+    },
+    clampRect() { const r = this.rect, iw = this.img.width, ih = this.img.height; r.w = clamp(r.w, iw * 0.05, iw); r.h = r.w * this.sig.h / this.sig.w; r.x = clamp(r.x, -r.w * 0.5, iw - r.w * 0.5); r.y = clamp(r.y, -r.h * 0.5, ih - r.h * 0.5); },
+    syncSlider() { const pct = Math.round(this.rect.w / this.img.width * 100); $('sign-size').value = pct; $('sign-size-val').textContent = pct + '%'; },
+    setSize(pct) { if (!this.rect) return; const r = this.rect, cx = r.x + r.w / 2, cy = r.y + r.h / 2; r.w = this.img.width * pct / 100; r.h = r.w * this.sig.h / this.sig.w; r.x = cx - r.w / 2; r.y = cy - r.h / 2; this.clampRect(); $('sign-size-val').textContent = pct + '%'; this.draw(); },
+    layout() {
+      if ($('view-sign').classList.contains('hidden') || !this.img) return;
+      const st = $('sign-stage'), dpr = window.devicePixelRatio || 1;
+      this.W = st.clientWidth; this.H = st.clientHeight;
+      this.canvas.width = Math.round(this.W * dpr); this.canvas.height = Math.round(this.H * dpr);
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const m = 14; this.scale = Math.min((this.W - 2 * m) / this.img.width, (this.H - 2 * m) / this.img.height);
+      this.ox = (this.W - this.img.width * this.scale) / 2; this.oy = (this.H - this.img.height * this.scale) / 2;
+      if (this.sig && !this.rect) this.defaultRect();
+      this.draw();
+    },
+    async draw() {
+      const ctx = this.ctx; ctx.clearRect(0, 0, this.W, this.H);
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(this.img, this.ox, this.oy, this.img.width * this.scale, this.img.height * this.scale);
+      if (!this.sig || !this.rect) return;
+      const r = this.rect, sx = this.ox + r.x * this.scale, sy = this.oy + r.y * this.scale, sw = r.w * this.scale, sh = r.h * this.scale;
+      try { const im = await sigImage(this.sig.dataUrl); ctx.drawImage(im, sx, sy, sw, sh); } catch (e) { /* ignore */ }
+      ctx.save(); ctx.strokeStyle = cssVar('--accent'); ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]); ctx.strokeRect(sx - 4, sy - 4, sw + 8, sh + 8); ctx.restore();
+    },
+    pos(e) { const rc = this.canvas.getBoundingClientRect(); return { x: e.clientX - rc.left, y: e.clientY - rc.top }; },
+    down(e) {
+      if (!this.rect) return;
+      e.preventDefault(); try { this.canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+      this.ptrs.set(e.pointerId, this.pos(e));
+      if (this.ptrs.size === 2) { const [a, b] = Array.from(this.ptrs.values()); this.pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y), w0: this.rect.w }; }
+    },
+    move(e) {
+      if (!this.ptrs.has(e.pointerId)) return;
+      e.preventDefault();
+      const p = this.pos(e), prev = this.ptrs.get(e.pointerId); this.ptrs.set(e.pointerId, p);
+      if (this.ptrs.size >= 2 && this.pinch) {
+        const [a, b] = Array.from(this.ptrs.values()), d = Math.hypot(a.x - b.x, a.y - b.y), r = this.rect, cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+        r.w = this.pinch.w0 * (d / Math.max(1, this.pinch.d0)); r.h = r.w * this.sig.h / this.sig.w; r.x = cx - r.w / 2; r.y = cy - r.h / 2; this.clampRect(); this.syncSlider();
+      } else { this.rect.x += (p.x - prev.x) / this.scale; this.rect.y += (p.y - prev.y) / this.scale; this.clampRect(); }
+      this.draw();
+    },
+    up(e) { this.ptrs.delete(e.pointerId); if (this.ptrs.size < 2) this.pinch = null; },
+    async apply() {
+      if (!this.sig || !this.rect) { toast('Choose or draw a signature first'); return; }
+      const page = this.page, r = this.rect, iw = this.img.width, ih = this.img.height;
+      overlay('Adding signature…'); await nextFrame();
+      try {
+        page.stamps = (page.stamps || []).concat([{ dataUrl: this.sig.dataUrl, x: r.x / iw, y: r.y / ih, w: r.w / iw, h: r.h / ih }]);
+        const c = this.img; await drawStamps(c, page.stamps.slice(-1));
+        page.result = { buf: await canvasToJpegBuf(c, S.jpegQ), w: c.width, h: c.height };
+        page.thumb = thumbOf(c, 320);
+        await persistPage(page); await persistDoc(); renderGrid();
+        toast('Signature added');
+      } catch (e) { console.error(e); toast('Could not add the signature'); }
+      hideOverlay(); this.close();
+    },
+    close() { this.img = null; this.page = null; this.rect = null; showView('view-pages'); },
+    async deleteSig() {
+      if (!this.sig) return;
+      if (!await askConfirm('Delete this saved signature? Pages already signed keep it.', 'Delete', true)) return;
+      const list = loadSigs().filter((x) => x.id !== this.sig.id); saveSigs(list);
+      this.sig = list[0] || null; this.rect = null; this.renderList(); this.layout();
+    }
   };
 
   /* ---------- library ---------- */
@@ -2288,6 +2643,25 @@ if (typeof module !== 'undefined') module.exports = IP;
     $('viewer-prev').addEventListener('click', () => Viewer.step(-1));
     $('viewer-next').addEventListener('click', () => Viewer.step(1));
     $('viewer-enhance').addEventListener('click', () => { const i = Viewer.index; Viewer.close(); if (pages[i]) Filter.open(pages[i], false); });
+    $('viewer-sign').addEventListener('click', () => { const i = Viewer.index; Viewer.close(); if (pages[i]) Sign.open(pages[i]); });
+    $('viewer-stage').addEventListener('click', (e) => { if (e.target === e.currentTarget) Viewer.close(); });
+    // sign
+    const sgc = $('sign-canvas');
+    sgc.addEventListener('pointerdown', (e) => Sign.down(e)); sgc.addEventListener('pointermove', (e) => Sign.move(e));
+    sgc.addEventListener('pointerup', (e) => Sign.up(e)); sgc.addEventListener('pointercancel', (e) => Sign.up(e));
+    $('sign-cancel').addEventListener('click', () => Sign.close());
+    $('sign-apply').addEventListener('click', () => Sign.apply());
+    $('sign-size').addEventListener('input', (e) => Sign.setSize(Number(e.target.value)));
+    $('sig-new').addEventListener('click', () => SigPad.open((sig) => { Sign.sig = sig; Sign.rect = null; Sign.renderList(); Sign.layout(); }));
+    $('sig-delete').addEventListener('click', () => Sign.deleteSig());
+    const pad = $('sig-pad');
+    pad.addEventListener('pointerdown', (e) => SigPad.down(e)); pad.addEventListener('pointermove', (e) => SigPad.move(e));
+    pad.addEventListener('pointerup', (e) => SigPad.up(e)); pad.addEventListener('pointercancel', (e) => SigPad.up(e));
+    $('sigpad-save').addEventListener('click', () => SigPad.save());
+    $('sigpad-clear').addEventListener('click', () => SigPad.clear());
+    $('sigpad-cancel').addEventListener('click', () => closeModal('modal-sig'));
+    $('sigpad-photo').addEventListener('click', () => { const f = $('file-sig'); f.value = ''; f.click(); });
+    $('file-sig').addEventListener('change', (e) => { const f = e.target.files && e.target.files[0]; if (f) SigPad.fromPhoto(f); });
     $('viewer-img').addEventListener('click', (e) => { e.target.classList.toggle('zoom'); });
     $('exp-pdf').addEventListener('click', exportPDF);
     $('exp-photos').addEventListener('click', exportPhotos);
@@ -2295,10 +2669,10 @@ if (typeof module !== 'undefined') module.exports = IP;
     $('exp-quality').addEventListener('change', updateEstimate);
     $('lib-close').addEventListener('click', () => closeModal('modal-library'));
     $('lib-new').addEventListener('click', async () => { closeModal('modal-library'); await newDoc(); $('doc-title').focus(); });
-    document.querySelectorAll('.modal').forEach((m) => m.addEventListener('click', (e) => { if (e.target === m) m.classList.add('hidden'); }));
+    document.querySelectorAll('.modal').forEach((m) => { if (m.id !== 'modal-sig') m.addEventListener('click', (e) => { if (e.target === m) m.classList.add('hidden'); }); });
     bindSettings();
 
-    const relayout = () => { Crop.page && Crop.layout(); Filter.draw(); if (Live.running) Live.layout(); };
+    const relayout = () => { Crop.page && Crop.layout(); Filter.draw(); if (Live.running) Live.layout(); if (Sign.img) Sign.layout(); if (!$('modal-sig').classList.contains('hidden')) SigPad.layout(); };
     window.addEventListener('resize', relayout);
     if (window.visualViewport) window.visualViewport.addEventListener('resize', relayout);
     document.addEventListener('visibilitychange', () => { if (document.hidden && Live.running) Live.close(); });
