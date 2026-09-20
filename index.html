@@ -67,9 +67,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-l
 .icon-btn{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--surface-2);flex:none}
 .icon-btn svg{width:20px;height:20px}
 .icon-btn:active{background:var(--surface-3)}
-.docs-btn{padding:0 12px 0 10px;gap:6px;font-size:14px}
-.docs-btn b{background:var(--accent);color:var(--accent-ink);font-size:11px;min-width:18px;height:18px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
-.docs-btn b:empty{display:none}
+.btn.stack b{background:var(--accent);color:var(--accent-ink);font-size:10px;min-width:16px;height:16px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px;margin-left:2px;vertical-align:middle}
+.btn.stack b:empty{display:none}
 .fab{width:68px;height:68px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 10px 24px -8px var(--accent),0 0 0 6px var(--surface);margin-top:-30px;flex:none;transition:transform .1s ease}
 .fab svg{width:30px;height:30px;stroke-width:1.7}
 .fab:active{transform:scale(.94)}
@@ -128,9 +127,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .check input{width:20px;height:20px;accent-color:var(--accent);margin:0}
 
 /* live */
-#view-live{background:#000}
-#view-live video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
-#view-live canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .overlay-bar{position:absolute;left:0;right:0;background:rgba(0,0,0,.5);color:#fff;box-shadow:none;backdrop-filter:blur(10px)}
 .overlay-bar.top{top:0}
 .overlay-bar.bottom{bottom:0;justify-content:space-between;background:linear-gradient(to top,rgba(0,0,0,.75),rgba(0,0,0,.35))}
@@ -180,7 +176,21 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .viewer .vbar .btn{background:rgba(255,255,255,.14);color:#fff}
 .viewer .vbar .btn.primary{background:var(--accent);color:#fff}
 .viewer-stage{position:relative;z-index:1}
-.sigs{display:flex;gap:10px;overflow-x:auto;padding:10px 12px;background:var(--surface);box-shadow:0 -1px 0 var(--line);flex:none;scrollbar-width:none;min-height:82px;align-items:center}
+.epanel{background:var(--surface);box-shadow:0 -1px 0 var(--line);padding:6px 14px 8px;flex:none;max-height:46vh;overflow:auto}
+.erow{display:flex;align-items:center;gap:8px;min-height:40px}
+.erow.hidden{display:none !important}
+.erow textarea,.erow input[type=url]{flex:1;background:var(--surface-2);border:0;border-radius:10px;padding:9px 12px;font:inherit;color:inherit;-webkit-user-select:text;user-select:text;min-width:0;resize:none}
+.erow select{background:var(--surface-2);border:0;border-radius:10px;padding:7px 10px;min-height:38px;font-weight:600}
+.chip{min-width:38px;height:38px;border-radius:10px;background:var(--surface-2);display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+.chip.on{background:var(--accent);color:var(--accent-ink)}
+.colors{display:inline-flex;gap:8px;align-items:center;margin-left:4px}
+.swatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);box-shadow:inset 0 0 0 2px var(--surface)}
+.swatch.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.tools{gap:2px;padding-left:4px;padding-right:4px;justify-content:space-between}
+.tools .btn.stack{min-width:0;flex:1;padding:6px 2px;font-size:11px}
+.tools .btn.stack.on{color:var(--accent)}
+.erow.slider-row{display:grid}
+.sigs{display:flex;gap:10px;overflow-x:auto;padding:10px 0;flex:none;scrollbar-width:none;min-height:82px;align-items:center}
 .sigs::-webkit-scrollbar{display:none}
 .sig{flex:none;width:118px;height:62px;border-radius:10px;background:#fff;border:2.5px solid transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .sig img{max-width:92%;max-height:84%;display:block}
@@ -198,7 +208,6 @@ button,.btn{touch-action:manipulation}
 <!-- Pages -->
 <section id="view-pages" class="view">
   <header class="bar top">
-    <button class="btn pill docs-btn" id="btn-library" aria-label="Documents"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Docs</span><b id="btn-library-count"></b></button>
     <button class="icon-btn" id="btn-settings" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     <input id="doc-title" class="title-input" type="text" placeholder="Untitled scan" autocomplete="off">
     <button class="btn primary pill" id="btn-export"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Export</button>
@@ -214,7 +223,7 @@ button,.btn{touch-action:manipulation}
   <footer class="bar bottom dock">
     <button class="btn stack" id="btn-photos"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5L7 19"/></svg>Import photos</button>
     <button class="fab" id="btn-camera" aria-label="Take a photo"><svg viewBox="0 0 24 24"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.6-2.4a1 1 0 0 1 .8-.6h3.2a1 1 0 0 1 .8.6L16 7h2.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="13" r="3.6"/></svg></button>
-    <button class="btn stack" id="btn-live"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="12" rx="2.5"/><path d="M17 10l4-2.2v8.4L17 14z"/></svg>Live scan</button>
+    <button class="btn stack" id="btn-library"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Documents <b id="btn-library-count"></b></span></button>
   </footer>
 </section>
 
@@ -266,23 +275,6 @@ button,.btn{touch-action:manipulation}
   <div class="bar bottom" style="min-height:0;padding-top:0;padding-bottom:env(safe-area-inset-bottom);box-shadow:none"></div>
 </section>
 
-<!-- Live scan -->
-<section id="view-live" class="view hidden">
-  <video id="live-video" playsinline muted autoplay></video>
-  <canvas id="live-overlay"></canvas>
-  <div class="flash" id="live-flash"></div>
-  <header class="bar top overlay-bar">
-    <button class="btn pill" id="live-close">Done</button>
-    <div class="bar-title" id="live-status">Point at a page</div>
-    <label class="check"><input type="checkbox" id="live-auto" checked> Auto</label>
-  </header>
-  <footer class="bar bottom overlay-bar">
-    <div class="live-count" id="live-count"></div>
-    <button class="shutter" id="live-shutter" aria-label="Capture page"></button>
-    <button class="btn pill hidden" id="live-torch">Torch</button>
-  </footer>
-</section>
-
 <!-- Page action sheet -->
 <div id="sheet-page" class="modal hidden"><div class="sheet"><div class="grabber"></div><h3 id="sheet-page-title">Page</h3>
   <div class="action-list">
@@ -291,7 +283,7 @@ button,.btn{touch-action:manipulation}
     <button data-act="rotate"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></span>Rotate right</button>
     <button data-act="up"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>Move earlier</button>
     <button data-act="down"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span>Move later</button>
-    <button data-act="sign"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 20c4-1 5-5 7-8s3-5 4-4-1 6 1 6 3-3 4-3 1 2 2 2"/><path d="M3 21h18"/></svg></span>Add signature</button>
+    <button data-act="edit"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M13 7l3 3"/></svg></span>Edit: text, whiteout, sign, link</button>
     <button data-act="jpg"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5L7 19"/></svg></span>Save to Photos (JPG)</button>
     <button data-act="delete" class="danger"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></span>Delete page</button>
   </div>
@@ -306,6 +298,7 @@ button,.btn{touch-action:manipulation}
   <div class="row"><label>Layout</label><select id="exp-layout"><option value="1">One page per sheet</option><option value="2">Two per sheet (ID card)</option></select></div>
   <div class="row"><label>Margins</label><select id="exp-margin"><option value="0">None</option><option value="18">Small (¼ in)</option><option value="36">Normal (½ in)</option></select></div>
   <div class="row"><label>Page numbers</label><select id="exp-numbers"><option value="none">Off</option><option value="bottom">Bottom center</option></select></div>
+  <div class="row"><label>Password<span class="sub">Optional. Needed to open the PDF</span></label><input type="text" id="exp-pass" autocomplete="off" placeholder="None" style="max-width:46%"></div>
   <div class="row"><label>Quality<span class="sub" id="exp-est">&nbsp;</span></label><select id="exp-quality"><option value="small">Small file</option><option value="balanced" selected>Balanced</option><option value="best">Best</option></select></div>
   <div class="stack">
     <button class="btn primary block" id="exp-pdf">Save PDF</button>
@@ -327,7 +320,6 @@ button,.btn{touch-action:manipulation}
   <div class="row"><label>Default enhance mode</label><select id="set-mode"></select></div>
   <div class="row"><label>Edge trim<span class="sub">Shave the outline slightly inward</span></label><select id="set-trim"><option value="0">Off</option><option value="0.5">Slight</option><option value="1.2">More</option></select></div>
   <div class="row"><label>Review after each camera photo<span class="sub">Show the corner editor for single photos</span></label><input type="checkbox" id="set-review" class="check"></div>
-  <div class="row"><label>Auto capture in live scan<span class="sub">Shoots when the page holds still</span></label><input type="checkbox" id="set-autocap" class="check"></div>
   <div class="row"><label>Clean page edges<span class="sub">Whiten desk or table showing at the border</span></label><input type="checkbox" id="set-edges" class="check"></div>
   <div class="row"><label>Theme</label><select id="set-theme"><option value="auto">Match device</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
   <div class="stack"><button class="btn block" id="set-close">Done</button><button class="btn block danger" id="set-clear">Delete all documents on this device</button></div>
@@ -344,27 +336,42 @@ button,.btn{touch-action:manipulation}
   <div class="viewer-stage" id="viewer-stage"><img id="viewer-img" alt=""></div>
   <footer class="bar bottom vbar" style="justify-content:center;gap:12px">
     <button class="btn pill" id="viewer-prev">Previous</button>
-    <button class="btn pill primary" id="viewer-sign">Sign</button>
+    <button class="btn pill primary" id="viewer-edit">Edit</button>
     <button class="btn pill" id="viewer-next">Next</button>
   </footer>
 </div>
 
-<!-- Sign (place a signature on a page) -->
-<section id="view-sign" class="view hidden">
+<!-- Edit: text, whiteout, highlight, link, pen, signature -->
+<section id="view-edit" class="view hidden">
   <header class="bar top">
-    <button class="btn quiet" id="sign-cancel">Cancel</button>
-    <div class="bar-title">Add signature</div>
-    <button class="btn primary pill" id="sign-apply">Apply</button>
+    <button class="btn quiet" id="edit-cancel">Cancel</button>
+    <div class="bar-title">Edit page</div>
+    <button class="btn primary pill" id="edit-done">Done</button>
   </header>
-  <div class="stage" id="sign-stage"><canvas id="sign-canvas"></canvas><div class="hint" id="sign-hint">Drag to move. Pinch or use the slider to resize.</div></div>
-  <div class="sigs" id="sig-list"></div>
-  <div class="sliders" style="max-height:none;padding-top:0">
-    <div class="slider-row"><span>Size</span><input type="range" min="8" max="90" id="sign-size"><span class="val" id="sign-size-val">30</span></div>
+  <div class="stage" id="edit-stage"><canvas id="edit-canvas"></canvas><div class="hint hidden" id="edit-hint"></div></div>
+  <div class="epanel hidden" id="edit-panel">
+    <div class="erow" data-for="text"><textarea id="ed-text" rows="2" placeholder="Type your text" autocomplete="off"></textarea></div>
+    <div class="erow" data-for="link"><input type="url" id="ed-url" placeholder="https://" autocomplete="off" inputmode="url"></div>
+    <div class="erow chips" data-for="text">
+      <select id="ed-font"><option value="sans">Sans (Arial)</option><option value="serif">Serif (Times)</option><option value="mono">Mono (Courier)</option></select>
+      <button class="chip" id="ed-bold"><b>B</b></button>
+      <span class="colors" id="ed-colors"></span>
+    </div>
+    <div class="erow chips" data-for="whiteout highlight draw"><span class="colors" id="ed-colors2"></span></div>
+    <div class="erow slider-row" data-for="text sig draw"><span id="ed-size-label">Size</span><input type="range" min="1" max="100" id="ed-size"><span class="val" id="ed-size-val"></span></div>
+    <div class="erow slider-row" data-for="whiteout highlight link"><span>Width</span><input type="range" min="2" max="100" id="ed-w"><span class="val" id="ed-w-val"></span></div>
+    <div class="erow slider-row" data-for="whiteout highlight link"><span>Height</span><input type="range" min="1" max="100" id="ed-h"><span class="val" id="ed-h-val"></span></div>
+    <div class="erow sigs" id="sig-list" data-for="sig"></div>
+    <div class="erow chips" data-for="sig"><button class="btn" id="sig-new">New signature</button><button class="btn danger" id="sig-delete">Delete saved</button></div>
+    <div class="erow chips" data-for="text whiteout highlight link sig draw"><button class="btn danger" id="ed-delete">Remove this item</button><span class="spacer"></span><button class="btn" id="ed-deselect">OK</button></div>
   </div>
-  <footer class="bar bottom">
-    <button class="btn" id="sig-new"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New signature</button>
-    <span class="spacer"></span>
-    <button class="btn danger" id="sig-delete">Delete this signature</button>
+  <footer class="bar bottom tools" id="edit-tools">
+    <button class="btn stack" data-tool="text"><svg viewBox="0 0 24 24"><path d="M5 6h14M12 6v13M9 19h6"/></svg>Text</button>
+    <button class="btn stack" data-tool="whiteout"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2"/><path d="M8 12h8"/></svg>Whiteout</button>
+    <button class="btn stack" data-tool="highlight"><svg viewBox="0 0 24 24"><path d="M4 18h16M7 15l7-9 3 3-7 9z"/></svg>Highlight</button>
+    <button class="btn stack" data-tool="link"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>Link</button>
+    <button class="btn stack" data-tool="draw"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M13 7l3 3"/></svg>Pen</button>
+    <button class="btn stack" data-tool="sig"><svg viewBox="0 0 24 24"><path d="M3 20c4-1 5-5 7-8s3-5 4-4-1 6 1 6 3-3 4-3 1 2 2 2"/><path d="M3 21h18"/></svg>Sign</button>
   </footer>
 </section>
 
@@ -721,6 +728,36 @@ const IP = (function () {
     return q;
   }
 
+  /* smooth region = paper: local texture (|pixel - 3x3 mean|, averaged over 7x7) is low on paper between the print,
+     high on fabric, wood grain and carpet. Print lines are closed over with a morphological closing. */
+  function detectByFlatness(g, w, h) {
+    const n = w * h, bl = boxBlur(g, w, h, 1), dev = new Float32Array(n);
+    for (let i = 0; i < n; i++) dev[i] = Math.abs(g[i] - bl[i]);
+    const tex = boxBlur(dev, w, h, 3);
+    /* adaptive threshold: Otsu on the texture map (scaled to 0..255, texture rarely exceeds 30) */
+    const scaled = new Float32Array(n); for (let i = 0; i < n; i++) scaled[i] = Math.min(255, tex[i] * 8);
+    const hist = histogram(scaled), t = otsu(hist, n) / 8;
+    if (t < 0.6 || t > 12) return null; /* no clear smooth-vs-textured split in this photo */
+    const mask = new Uint8Array(n);
+    for (let i = 0; i < n; i++) mask[i] = tex[i] < t ? 1 : 0;
+    /* close over print lines (text rows are a few px apart at this scale), then drop thin bridges */
+    let m = morph(mask, w, h, 4, true); m = morph(m, w, h, 4, false);
+    m = morph(m, w, h, 3, false); m = morph(m, w, h, 3, true);
+    const L = label(m, w, h);
+    if (!L.count) return null;
+    let best = 0, bestA = 0;
+    for (let k = 1; k <= L.count; k++) if (L.areas[k] > bestA) { bestA = L.areas[k]; best = k; }
+    if (bestA < 0.06 * n || bestA > 0.985 * n) return null;
+    const hull = convexHull(boundary(L.lab, w, h, best));
+    if (hull.length < 4) return null;
+    const red = reduceHull(hull, 1.2);
+    const q = maxAreaQuad(red.length >= 4 ? red : hull);
+    if (!q) return null;
+    const oq = orderQuad(q.map(p => ({ x: p[0], y: p[1] })));
+    if (bestA < 0.8 * quadArea(oq)) return null; /* ragged blob, not a sheet of paper */
+    return oq;
+  }
+
   /* region enclosed by edges around the image centre */
   function detectByEdges(mag, tEdge, w, h) {
     const n = w * h;
@@ -978,6 +1015,7 @@ const IP = (function () {
     if (tEdge < 12) tEdge = 12;
     const cands = [];
     const qa = detectByBrightness(rgba, g, w, h); if (qa) cands.push({ q: qa, m: 'paper' });
+    const qf = detectByFlatness(g, w, h); if (qf) cands.push({ q: qf, m: 'flat' });
     const qb = detectByEdges(mag, tEdge, w, h); if (qb) cands.push({ q: qb, m: 'edges' });
     for (const qc of detectByOutline(mag, tEdge, w, h)) cands.push({ q: qc, m: 'outline' });
     const lineQuads = detectByLines(gb, mag, tEdge, w, h).map((q) => ({ q, s: scoreQuad(q, mag, w, h, tEdge) })).filter((x) => x.s > 0.35);
@@ -1443,7 +1481,7 @@ if (typeof module !== 'undefined') module.exports = IP;
   }
   function overlay(text) { $('overlay-text').textContent = text || 'Working…'; $('overlay').classList.remove('hidden'); }
   function hideOverlay() { $('overlay').classList.add('hidden'); }
-  function showView(id) { ['view-pages', 'view-crop', 'view-filter', 'view-live', 'view-sign'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
+  function showView(id) { ['view-pages', 'view-crop', 'view-filter', 'view-edit'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
   function openModal(id) { $(id).classList.remove('hidden'); }
   function closeModal(id) { $(id).classList.add('hidden'); }
   function askConfirm(message, okLabel, danger) {
@@ -1735,27 +1773,75 @@ if (typeof module !== 'undefined') module.exports = IP;
     const size = IP.outputSize(page.quad, page.shape, S.maxDim);
     const out = await Engine.call('warpRender', { src: o.rgba, sw: o.w, sh: o.h, quad: page.quad, dw: size.w, dh: size.h, params: fx(page.filter) });
     const c = rotateCanvas(rgbaToCanvas(out, size.w, size.h), page.rotation);
-    await drawStamps(c, page.stamps);
+    await drawAnnots(c, pageAnnots(page));
     page.result = { buf: await canvasToJpegBuf(c, S.jpegQ), w: c.width, h: c.height };
     page.thumb = thumbOf(c, 320);
   }
-  /* signatures placed on the page, in relative coordinates of the (rotated) result */
+  function releasePage(page) { if (page._orig && page._orig.canvas) { page._orig.canvas.width = 0; page._orig.canvas.height = 0; } delete page._orig; delete page._detOK; }
+  /* ---------- annotations (text, whiteout, highlight, link, pen, signature) in relative coordinates of the rotated result ---------- */
+  const FONTS = { sans: '-apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif', serif: 'Georgia, "Times New Roman", Times, serif', mono: 'Menlo, Consolas, "Courier New", monospace' };
+  const COLORS = { text: ['#111111', '#1d4ed8', '#dc2626', '#ffffff'], whiteout: ['#ffffff', 'paper', '#111111'], highlight: ['#fff176', '#b9f6a0', '#ffb3d9', '#a6dcff'], draw: ['#111111', '#1d4ed8', '#dc2626', '#059669'] };
+  function pageAnnots(page) {
+    if (page.stamps && page.stamps.length) { page.annots = (page.annots || []).concat(page.stamps.map((st) => ({ id: uid(), type: 'sig', dataUrl: st.dataUrl, x: st.x, y: st.y, w: st.w, h: st.h, rot: 0 }))); }
+    delete page.stamps;
+    if (!page.annots) page.annots = [];
+    return page.annots;
+  }
+  function rotateAnnots(list) {
+    return (list || []).map((a) => { const r = Object.assign({}, a, { x: 1 - (a.y + a.h), y: a.x, w: a.h, h: a.w, rot: ((a.rot || 0) + 1) % 4 }); if (a.pts) r.pts = a.pts.map(([x, y]) => [1 - y, x]); return r; });
+  }
   const sigImgCache = new Map();
   async function sigImage(dataUrl) {
     if (sigImgCache.has(dataUrl)) return sigImgCache.get(dataUrl);
     const img = await loadImg(dataUrl); sigImgCache.set(dataUrl, img); return img;
   }
-  async function drawStamps(c, stamps) {
-    if (!stamps || !stamps.length) return;
-    const ctx = c.getContext('2d');
-    for (const st of stamps) {
-      try { const img = await sigImage(st.dataUrl); ctx.drawImage(img, st.x * c.width, st.y * c.height, st.w * c.width, st.h * c.height); } catch (e) { /* skip a broken stamp */ }
+  function textMetrics(ctx, a, W) {
+    const px = Math.max(6, (a.size || 0.022) * W), lines = String(a.text || '').split('\n');
+    ctx.font = (a.bold ? 'bold ' : '') + Math.round(px) + 'px ' + (FONTS[a.font] || FONTS.sans);
+    let tw = 0; for (const l of lines) tw = Math.max(tw, ctx.measureText(l || ' ').width);
+    return { px, lines, tw: tw + px * 0.3, th: lines.length * px * 1.25 + px * 0.2 };
+  }
+  function strokeBox(a) {
+    let x0 = 1, y0 = 1, x1 = 0, y1 = 0;
+    for (const [x, y] of a.pts) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    const m = (a.width || 0.004); a.x = x0 - m; a.y = y0 - m; a.w = x1 - x0 + 2 * m; a.h = y1 - y0 + 2 * m;
+  }
+  async function preloadSigs(annots) { for (const a of annots || []) if (a.type === 'sig' && !sigImgCache.has(a.dataUrl)) { try { await sigImage(a.dataUrl); } catch (e) { /* skip */ } } }
+  /* draws annotations onto a context whose unit is the page pixel (W x H); signature images must be preloaded */
+  function drawAnnotsOn(ctx, annots, W, H) {
+    for (const a of annots || []) {
+      ctx.save();
+      try {
+        if (a.type === 'whiteout') { ctx.fillStyle = a.color === 'paper' ? (a.paper || '#ffffff') : (a.color || '#ffffff'); ctx.fillRect(a.x * W, a.y * H, a.w * W, a.h * H); }
+        else if (a.type === 'highlight') { ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = a.color || '#fff176'; ctx.fillRect(a.x * W, a.y * H, a.w * W, a.h * H); }
+        else if (a.type === 'draw' && a.pts && a.pts.length) {
+          ctx.strokeStyle = a.color || '#111'; ctx.lineWidth = Math.max(1, (a.width || 0.004) * W); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+          ctx.beginPath(); a.pts.forEach(([x, y], i) => { if (i) ctx.lineTo(x * W, y * H); else ctx.moveTo(x * W, y * H); }); if (a.pts.length === 1) ctx.lineTo(a.pts[0][0] * W + 0.1, a.pts[0][1] * H); ctx.stroke();
+        } else if (a.type === 'sig') {
+          const img = sigImgCache.get(a.dataUrl); if (!img) { ctx.restore(); continue; }
+          const rot = a.rot || 0, pw = a.w * W, ph = a.h * H, uw = rot % 2 ? ph : pw, uh = rot % 2 ? pw : ph;
+          ctx.translate((a.x + a.w / 2) * W, (a.y + a.h / 2) * H); ctx.rotate(rot * Math.PI / 2); ctx.drawImage(img, -uw / 2, -uh / 2, uw, uh);
+        } else if (a.type === 'text') {
+          const m = textMetrics(ctx, a, W), rot = a.rot || 0;
+          if (rot % 2) { a.w = m.th / W; a.h = m.tw / H; } else { a.w = m.tw / W; a.h = m.th / H; }
+          ctx.translate((a.x + a.w / 2) * W, (a.y + a.h / 2) * H); ctx.rotate(rot * Math.PI / 2);
+          ctx.fillStyle = a.color || '#111'; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+          m.lines.forEach((l, i) => ctx.fillText(l, -m.tw / 2 + m.px * 0.15, -m.th / 2 + m.px * 0.1 + i * m.px * 1.25));
+        }
+      } catch (e) { /* skip a broken item */ }
+      ctx.restore();
     }
   }
-  function rotateStamps(stamps) { /* 90 degrees clockwise in relative coordinates */
-    return (stamps || []).map((st) => ({ dataUrl: st.dataUrl, x: 1 - (st.y + st.h), y: st.x, w: st.h, h: st.w }));
+  async function drawAnnots(c, annots) { await preloadSigs(annots); drawAnnotsOn(c.getContext('2d'), annots, c.width, c.height); }
+  /* the page as rendered before any annotation is drawn on it */
+  async function cleanResult(page) {
+    if (!pageAnnots(page).length) return bufToCanvas(page.result.buf);
+    const o = await ensureOrig(page);
+    const size = IP.outputSize(page.quad, page.shape, S.maxDim);
+    const out = await Engine.call('warpRender', { src: o.rgba, sw: o.w, sh: o.h, quad: page.quad, dw: size.w, dh: size.h, params: fx(page.filter) });
+    releasePage(page);
+    return rotateCanvas(rgbaToCanvas(out, size.w, size.h), page.rotation);
   }
-  function releasePage(page) { if (page._orig && page._orig.canvas) { page._orig.canvas.width = 0; page._orig.canvas.height = 0; } delete page._orig; delete page._detOK; }
   async function importFiles(files, allowReview) {
     const list = Array.from(files || []).filter((f) => (f.type && f.type.startsWith('image/')) || /\.(heic|heif|jpe?g|png|webp|gif|bmp)$/i.test(f.name));
     if (!list.length) { toast('No image selected'); return; }
@@ -2027,7 +2113,7 @@ if (typeof module !== 'undefined') module.exports = IP;
       const page = this.page, applyAll = $('apply-all').checked;
       page.filter = Object.assign({}, this.params);
       let delta = ((this.rotation - (page.rotation || 0)) % 4 + 4) % 4;
-      while (delta-- > 0) page.stamps = rotateStamps(page.stamps);
+      while (delta-- > 0) page.annots = rotateAnnots(pageAnnots(page));
       page.rotation = this.rotation;
       overlay('Saving page…'); await nextFrame();
       try {
@@ -2052,114 +2138,6 @@ if (typeof module !== 'undefined') module.exports = IP;
       const page = this.page; this.base = null; this.quick = null; this.preview = null; this.origPreview = null; this.thumbsToken++; clearTimeout(this.finalTimer);
       if (this.isNew) { Crop.open(page, true); return; }
       releasePage(page); this.page = null; showView('view-pages');
-    }
-  };
-
-  /* ---------- live scan ---------- */
-  const Live = {
-    stream: null, track: null, running: false, busy: false, lastQuad: null, stable: 0, armed: true, lastCap: 0, count: 0, frame: null, timer: 0, torch: false,
-    async open() {
-      showView('view-live');
-      this.count = 0; this.stable = 0; this.lastQuad = null; this.armed = true; this.torch = false;
-      $('live-count').textContent = ''; $('live-status').textContent = 'Starting camera…'; $('live-torch').classList.add('hidden');
-      $('live-auto').checked = !!S.autoCapture;
-      const video = $('live-video');
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { this.fail('Live camera is not available here. Use the Camera button instead.'); return; }
-      try {
-        this.stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: 'environment' }, width: { ideal: 3840 }, height: { ideal: 2160 } } });
-      } catch (e) {
-        const msg = e && (e.name === 'NotAllowedError' || e.name === 'SecurityError') ? 'Camera access was blocked. Allow the camera in your browser settings, or use the Camera button.' : 'Could not start the camera. Use the Camera button instead.';
-        this.fail(msg); return;
-      }
-      this.track = this.stream.getVideoTracks()[0];
-      video.srcObject = this.stream;
-      try { await video.play(); } catch (e) { /* autoplay may need a tap */ }
-      this.running = true;
-      this.frame = makeCanvas(360, 360);
-      try { const caps = this.track.getCapabilities ? this.track.getCapabilities() : {}; if (caps && caps.torch) $('live-torch').classList.remove('hidden'); } catch (e) { /* ignore */ }
-      $('live-status').textContent = 'Point at a page';
-      this.layout();
-      this.loop();
-    },
-    fail(msg) { $('live-status').textContent = 'Camera unavailable'; toast(msg, 5000); setTimeout(() => this.close(), 300); },
-    layout() {
-      const c = $('live-overlay'), dpr = window.devicePixelRatio || 1;
-      c.width = Math.round(c.clientWidth * dpr); c.height = Math.round(c.clientHeight * dpr);
-    },
-    async loop() {
-      if (!this.running) return;
-      const video = $('live-video');
-      if (!this.busy && video.readyState >= 2 && video.videoWidth) {
-        this.busy = true;
-        try {
-          const vw = video.videoWidth, vh = video.videoHeight, s = 360 / Math.max(vw, vh), fw = Math.max(16, Math.round(vw * s)), fh = Math.max(16, Math.round(vh * s));
-          const f = this.frame; if (f.width !== fw || f.height !== fh) { f.width = fw; f.height = fh; }
-          f.getContext('2d').drawImage(video, 0, 0, fw, fh);
-          const d = f.getContext('2d').getImageData(0, 0, fw, fh);
-          const res = await Engine.call('detect', { rgba: d.data, w: fw, h: fh }, [d.data.buffer]);
-          if (this.running) this.handleDetection(res, fw, fh);
-        } catch (e) { /* ignore frame errors */ }
-        this.busy = false;
-      }
-      this.timer = setTimeout(() => this.loop(), 160);
-    },
-    handleDetection(res, fw, fh) {
-      const good = res.ok && res.score > 0.32 && IP.quadArea(res.quad) > 0.18 * fw * fh;
-      let moved = 1;
-      if (good && this.lastQuad) {
-        moved = 0;
-        for (let i = 0; i < 4; i++) moved = Math.max(moved, Math.hypot(res.quad[i].x - this.lastQuad[i].x, res.quad[i].y - this.lastQuad[i].y) / Math.max(fw, fh));
-      }
-      if (good) { this.stable = (this.lastQuad && moved < 0.015) ? this.stable + 1 : 0; this.lastQuad = res.quad; }
-      else { this.stable = 0; this.lastQuad = null; }
-      if (!good || moved > 0.08) this.armed = true;
-      const auto = $('live-auto').checked;
-      const need = 6, t = now();
-      this.drawOverlay(good ? res.quad : null, fw, fh, good && auto ? Math.min(1, this.stable / need) : 0);
-      if (!good) $('live-status').textContent = 'Point at a page';
-      else if (auto && this.armed && t - this.lastCap > 2500) $('live-status').textContent = this.stable >= 2 ? 'Hold still…' : 'Page found';
-      else $('live-status').textContent = auto && !this.armed ? 'Move to the next page' : 'Page found. Tap the shutter';
-      if (good && auto && this.armed && this.stable >= need && t - this.lastCap > 2500) this.capture();
-    },
-    drawOverlay(quad, fw, fh, progress) {
-      const c = $('live-overlay'), ctx = c.getContext('2d'), dpr = window.devicePixelRatio || 1, W = c.clientWidth, H = c.clientHeight;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      if (!quad) return;
-      const s = Math.min(W / fw, H / fh), ox = (W - fw * s) / 2, oy = (H - fh * s) / 2;
-      const pts = quad.map((p) => ({ x: ox + p.x * s, y: oy + p.y * s }));
-      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); for (let i = 1; i < 4; i++) ctx.lineTo(pts[i].x, pts[i].y); ctx.closePath();
-      ctx.fillStyle = progress > 0 ? 'rgba(63,201,138,' + (0.12 + 0.28 * progress) + ')' : 'rgba(90,139,255,.14)'; ctx.fill();
-      ctx.lineWidth = 3; ctx.strokeStyle = progress >= 1 ? '#3FC98A' : '#fff'; ctx.stroke();
-      for (const p of pts) { ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill(); }
-    },
-    async capture() {
-      if (!this.running || this.busyCap) return;
-      const video = $('live-video'); if (!video.videoWidth) return;
-      this.busyCap = true; this.lastCap = now(); this.armed = false; this.stable = 0;
-      const fl = $('live-flash'); fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
-      try {
-        const c = imageToCanvas(video, S.maxDim);
-        $('live-status').textContent = 'Processing…';
-        const page = await prepareFromCanvas(c);
-        await finalizePage(page); releasePage(page);
-        await persistPage(page); pages.push(page); await persistDoc();
-        this.count++;
-        $('live-count').textContent = this.count + (this.count === 1 ? ' page' : ' pages');
-      } catch (e) { console.error(e); toast('Capture failed: ' + (e.message || 'error')); }
-      this.busyCap = false;
-    },
-    async toggleTorch() {
-      if (!this.track) return;
-      this.torch = !this.torch;
-      try { await this.track.applyConstraints({ advanced: [{ torch: this.torch }] }); $('live-torch').textContent = this.torch ? 'Torch off' : 'Torch'; }
-      catch (e) { toast('Torch not supported'); }
-    },
-    close() {
-      this.running = false; clearTimeout(this.timer);
-      if (this.stream) { for (const t of this.stream.getTracks()) { try { t.stop(); } catch (e) { /* ignore */ } } }
-      this.stream = null; this.track = null;
-      const v = $('live-video'); try { v.pause(); v.srcObject = null; } catch (e) { /* ignore */ }
-      if (!$('view-live').classList.contains('hidden')) { renderGrid(); showView('view-pages'); }
     }
   };
 
@@ -2242,7 +2220,7 @@ if (typeof module !== 'undefined') module.exports = IP;
   }
   function openExport() {
     if (!pages.length) return;
-    $('exp-name').value = safeName(docName());
+    $('exp-name').value = safeName(docName()); $('exp-pass').value = '';
     $('exp-size').value = S.pdf.size; $('exp-orient').value = S.pdf.orient; $('exp-margin').value = String(S.pdf.margin); $('exp-quality').value = S.pdf.quality;
     $('exp-layout').value = S.pdf.layout || '1'; $('exp-numbers').value = S.pdf.numbers || 'none';
     updateEstimate();
@@ -2263,9 +2241,15 @@ if (typeof module !== 'undefined') module.exports = IP;
     overlay('Building PDF…'); await nextFrame();
     try {
       const { jsPDF } = window.jspdf;
-      const m = opt.margin, two = opt.layout === '2', gap = two ? 14 : 0;
+      const m = opt.margin, two = opt.layout === '2', gap = two ? 14 : 0, pass = ($('exp-pass').value || '').trim();
       let pdf = null, sheet = 0;
-      const addSheet = (pw, ph) => { const orient = pw > ph ? 'l' : 'p'; if (!pdf) pdf = new jsPDF({ unit: 'pt', format: [pw, ph], orientation: orient, compress: true }); else pdf.addPage([pw, ph], orient); sheet++; };
+      const addSheet = (pw, ph) => {
+        const orient = pw > ph ? 'l' : 'p';
+        if (!pdf) { const o = { unit: 'pt', format: [pw, ph], orientation: orient, compress: true }; if (pass) o.encryption = { userPassword: pass, ownerPassword: pass, userPermissions: ['print', 'modify', 'copy', 'annot-forms'] }; pdf = new jsPDF(o); }
+        else pdf.addPage([pw, ph], orient);
+        sheet++;
+      };
+      const addLinks = (page, x0, y0, dw, dh) => { for (const a of pageAnnots(page)) if (a.type === 'link' && a.url) { try { pdf.link(x0 + a.x * dw, y0 + a.y * dh, a.w * dw, a.h * dh, { url: /^https?:\/\//i.test(a.url) ? a.url : 'https://' + a.url }); } catch (e) { /* ignore */ } } };
       const stampNumber = (pw, ph) => { if (opt.numbers !== 'bottom') return; pdf.setFontSize(9); pdf.setTextColor(90); pdf.text(String(sheet), pw / 2, ph - 8, { align: 'center' }); };
       for (let i = 0; i < pages.length; i += (two ? 2 : 1)) {
         if (pages.length > 1) overlay('Adding page ' + (i + 1) + ' of ' + pages.length + '…');
@@ -2278,8 +2262,9 @@ if (typeof module !== 'undefined') module.exports = IP;
           addSheet(pw, ph);
           const slotW = pw - 2 * m, slotH = (ph - 2 * m - gap) / 2;
           imgs.forEach((img, k) => {
-            const sc = Math.min(slotW / img.w, slotH / img.h), dw = img.w * sc, dh = img.h * sc;
-            pdf.addImage(img.dataUrl, 'JPEG', (pw - dw) / 2, m + k * (slotH + gap) + (slotH - dh) / 2, dw, dh, undefined, 'FAST');
+            const sc = Math.min(slotW / img.w, slotH / img.h), dw = img.w * sc, dh = img.h * sc, x0 = (pw - dw) / 2, y0 = m + k * (slotH + gap) + (slotH - dh) / 2;
+            pdf.addImage(img.dataUrl, 'JPEG', x0, y0, dw, dh, undefined, 'FAST');
+            addLinks(pages[i + k], x0, y0, dw, dh);
           });
         } else {
           const img = imgs[0], landscape = opt.orient === 'landscape' || (opt.orient === 'auto' && img.w > img.h);
@@ -2288,6 +2273,7 @@ if (typeof module !== 'undefined') module.exports = IP;
           addSheet(pw, ph);
           const sc = Math.min((pw - 2 * m) / img.w, (ph - 2 * m) / img.h), dw = img.w * sc, dh = img.h * sc;
           pdf.addImage(img.dataUrl, 'JPEG', (pw - dw) / 2, (ph - dh) / 2, dw, dh, undefined, 'FAST');
+          addLinks(pages[i], (pw - dw) / 2, (ph - dh) / 2, dw, dh);
         }
         stampNumber(pw, ph);
       }
@@ -2322,7 +2308,7 @@ if (typeof module !== 'undefined') module.exports = IP;
       try {
         const c = rotateCanvas(await bufToCanvas(page.result.buf), 1);
         page.rotation = ((page.rotation || 0) + 1) % 4;
-        if (page.stamps && page.stamps.length) page.stamps = rotateStamps(page.stamps);
+        page.annots = rotateAnnots(pageAnnots(page));
         page.result = { buf: await canvasToJpegBuf(c, S.jpegQ), w: c.width, h: c.height };
         page.thumb = thumbOf(c, 320);
         await persistPage(page); await persistDoc(); renderGrid();
@@ -2333,8 +2319,8 @@ if (typeof module !== 'undefined') module.exports = IP;
       if (j < 0 || j >= pages.length) return;
       [pages[i], pages[j]] = [pages[j], pages[i]];
       await persistDoc(); renderGrid();
-    } else if (act === 'sign') {
-      Sign.open(page);
+    } else if (act === 'edit') {
+      Edit.open(page);
     } else if (act === 'jpg') {
       await deliverFile(new Blob([page.result.buf], { type: 'image/jpeg' }), safeName(docName()) + '-page' + (i + 1) + '.jpg');
     } else if (act === 'delete') {
@@ -2428,101 +2414,197 @@ if (typeof module !== 'undefined') module.exports = IP;
       if (this.onSave) this.onSave(sig);
     }
   };
-  const Sign = {
-    page: null, img: null, sig: null, rect: null, canvas: null, ctx: null, W: 0, H: 0, scale: 1, ox: 0, oy: 0, ptrs: new Map(), pinch: null,
-    async open(page) {
-      this.page = page; this.canvas = $('sign-canvas'); this.ctx = this.canvas.getContext('2d'); this.ptrs.clear(); this.pinch = null;
+  const Edit = {
+    page: null, base: null, annots: [], sel: null, tool: null, canvas: null, ctx: null, W: 0, H: 0, scale: 1, ox: 0, oy: 0, ptrs: new Map(), pinch: null, stroke: null, drawColor: '#111111', drawWidth: 0.004, hintTimer: 0,
+    async open(page, tool) {
+      this.page = page; this.canvas = $('edit-canvas'); this.ctx = this.canvas.getContext('2d'); this.ptrs.clear(); this.pinch = null; this.stroke = null; this.sel = null; this.tool = null;
       overlay('Loading…'); await nextFrame();
-      try { this.img = await bufToCanvas(page.result.buf); } catch (e) { hideOverlay(); toast('Could not load the page'); return; }
+      try { this.base = await cleanResult(page); } catch (e) { hideOverlay(); toast('Could not load the page'); return; }
       hideOverlay();
-      showView('view-sign');
-      const sigs = loadSigs();
-      this.sig = sigs[0] || null;
-      this.rect = null;
-      this.renderList();
-      this.layout();
-      if (!this.sig) SigPad.open((sig) => { this.sig = sig; this.rect = null; this.renderList(); this.layout(); });
+      this.annots = pageAnnots(page).map((a) => Object.assign({}, a, a.pts ? { pts: a.pts.map((p) => p.slice()) } : {}));
+      await preloadSigs(this.annots);
+      showView('view-edit');
+      this.layout(); this.select(null); this.syncTools();
+      if (tool) this.setTool(tool); else this.hint(this.annots.length ? 'Tap an item to change or move it, or pick a tool below' : 'Pick a tool below');
     },
-    renderList() {
-      const list = $('sig-list'); list.innerHTML = '';
-      const sigs = loadSigs();
-      if (!sigs.length) { const p = document.createElement('p'); p.className = 'note'; p.textContent = 'No signature yet. Tap New signature.'; list.appendChild(p); }
-      for (const sg of sigs) {
-        const b = document.createElement('button'); b.className = 'sig' + (this.sig && sg.id === this.sig.id ? ' on' : '');
-        const im = document.createElement('img'); im.src = sg.dataUrl; im.alt = 'Signature'; b.appendChild(im);
-        b.addEventListener('click', () => { this.sig = sg; this.defaultRect(); this.renderList(); this.draw(); });
-        list.appendChild(b);
-      }
-      $('sig-delete').disabled = !this.sig;
-    },
-    defaultRect() {
-      const iw = this.img.width, ih = this.img.height, sig = this.sig;
-      const w = Math.round(iw * 0.34), h = Math.round(w * sig.h / sig.w);
-      this.rect = { x: Math.round(iw * 0.55), y: Math.round(ih * 0.78 - h / 2), w, h };
-      this.clampRect(); this.syncSlider();
-    },
-    clampRect() { const r = this.rect, iw = this.img.width, ih = this.img.height; r.w = clamp(r.w, iw * 0.05, iw); r.h = r.w * this.sig.h / this.sig.w; r.x = clamp(r.x, -r.w * 0.5, iw - r.w * 0.5); r.y = clamp(r.y, -r.h * 0.5, ih - r.h * 0.5); },
-    syncSlider() { const pct = Math.round(this.rect.w / this.img.width * 100); $('sign-size').value = pct; $('sign-size-val').textContent = pct + '%'; },
-    setSize(pct) { if (!this.rect) return; const r = this.rect, cx = r.x + r.w / 2, cy = r.y + r.h / 2; r.w = this.img.width * pct / 100; r.h = r.w * this.sig.h / this.sig.w; r.x = cx - r.w / 2; r.y = cy - r.h / 2; this.clampRect(); $('sign-size-val').textContent = pct + '%'; this.draw(); },
+    hint(msg, ms) { const h = $('edit-hint'); h.textContent = msg; h.classList.remove('hidden'); clearTimeout(this.hintTimer); this.hintTimer = setTimeout(() => h.classList.add('hidden'), ms || 2600); },
     layout() {
-      if ($('view-sign').classList.contains('hidden') || !this.img) return;
-      const st = $('sign-stage'), dpr = window.devicePixelRatio || 1;
+      if ($('view-edit').classList.contains('hidden') || !this.base) return;
+      const st = $('edit-stage'), dpr = window.devicePixelRatio || 1;
       this.W = st.clientWidth; this.H = st.clientHeight;
       this.canvas.width = Math.round(this.W * dpr); this.canvas.height = Math.round(this.H * dpr);
       this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const m = 14; this.scale = Math.min((this.W - 2 * m) / this.img.width, (this.H - 2 * m) / this.img.height);
-      this.ox = (this.W - this.img.width * this.scale) / 2; this.oy = (this.H - this.img.height * this.scale) / 2;
-      if (this.sig && !this.rect) this.defaultRect();
+      const m = 10; this.scale = Math.min((this.W - 2 * m) / this.base.width, (this.H - 2 * m) / this.base.height);
+      this.ox = (this.W - this.base.width * this.scale) / 2; this.oy = (this.H - this.base.height * this.scale) / 2;
       this.draw();
     },
-    async draw() {
-      const ctx = this.ctx; ctx.clearRect(0, 0, this.W, this.H);
+    draw() {
+      if (!this.base) return;
+      const ctx = this.ctx, W = this.base.width, H = this.base.height; ctx.clearRect(0, 0, this.W, this.H);
       ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(this.img, this.ox, this.oy, this.img.width * this.scale, this.img.height * this.scale);
-      if (!this.sig || !this.rect) return;
-      const r = this.rect, sx = this.ox + r.x * this.scale, sy = this.oy + r.y * this.scale, sw = r.w * this.scale, sh = r.h * this.scale;
-      try { const im = await sigImage(this.sig.dataUrl); ctx.drawImage(im, sx, sy, sw, sh); } catch (e) { /* ignore */ }
-      ctx.save(); ctx.strokeStyle = cssVar('--accent'); ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]); ctx.strokeRect(sx - 4, sy - 4, sw + 8, sh + 8); ctx.restore();
+      ctx.drawImage(this.base, this.ox, this.oy, W * this.scale, H * this.scale);
+      ctx.save(); ctx.translate(this.ox, this.oy); ctx.scale(this.scale, this.scale);
+      drawAnnotsOn(ctx, this.annots, W, H);
+      for (const a of this.annots) if (a.type === 'link') { ctx.fillStyle = 'rgba(37,99,235,.14)'; ctx.fillRect(a.x * W, a.y * H, a.w * W, a.h * H); ctx.strokeStyle = 'rgba(37,99,235,.9)'; ctx.lineWidth = 2 / this.scale; ctx.strokeRect(a.x * W, a.y * H, a.w * W, a.h * H); }
+      ctx.restore();
+      const a = this.sel;
+      if (a) { const r = this.screenRect(a); ctx.save(); ctx.strokeStyle = cssVar('--accent'); ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]); ctx.strokeRect(r.x - 5, r.y - 5, r.w + 10, r.h + 10); ctx.restore(); }
     },
+    screenRect(a) { return { x: this.ox + a.x * this.base.width * this.scale, y: this.oy + a.y * this.base.height * this.scale, w: a.w * this.base.width * this.scale, h: a.h * this.base.height * this.scale }; },
     pos(e) { const rc = this.canvas.getBoundingClientRect(); return { x: e.clientX - rc.left, y: e.clientY - rc.top }; },
+    toRel(p) { return { x: (p.x - this.ox) / this.scale / this.base.width, y: (p.y - this.oy) / this.scale / this.base.height }; },
+    hitTest(p) {
+      for (let i = this.annots.length - 1; i >= 0; i--) { const r = this.screenRect(this.annots[i]); if (p.x >= r.x - 12 && p.x <= r.x + r.w + 12 && p.y >= r.y - 12 && p.y <= r.y + r.h + 12) return this.annots[i]; }
+      return null;
+    },
+    /* ---- tools ---- */
+    syncTools() { document.querySelectorAll('#edit-tools [data-tool]').forEach((b) => b.classList.toggle('on', b.dataset.tool === this.tool)); },
+    setTool(tool) {
+      if (tool === 'draw') { this.tool = this.tool === 'draw' ? null : 'draw'; this.select(null); this.syncTools(); if (this.tool) { this.showPanel('draw'); this.hint('Draw on the page with your finger'); } return; }
+      this.tool = null; this.syncTools();
+      const cx = 0.5, cy = 0.45;
+      if (tool === 'text') { const a = { id: uid(), type: 'text', text: '', font: 'sans', size: 0.022, color: '#111111', bold: false, x: 0.15, y: cy, w: 0.3, h: 0.03, rot: 0 }; this.annots.push(a); this.select(a); setTimeout(() => $('ed-text').focus(), 50); this.hint('Type below, then drag the text into place'); }
+      else if (tool === 'whiteout') { const a = { id: uid(), type: 'whiteout', color: '#ffffff', x: cx - 0.2, y: cy, w: 0.4, h: 0.045 }; this.annots.push(a); this.select(a); this.hint('Drag over the part to cover. Use Width and Height to size it'); }
+      else if (tool === 'highlight') { const a = { id: uid(), type: 'highlight', color: '#fff176', x: cx - 0.3, y: cy, w: 0.6, h: 0.035 }; this.annots.push(a); this.select(a); this.hint('Drag over the line to highlight'); }
+      else if (tool === 'link') { const a = { id: uid(), type: 'link', url: '', x: cx - 0.3, y: cy, w: 0.6, h: 0.035 }; this.annots.push(a); this.select(a); setTimeout(() => $('ed-url').focus(), 50); this.hint('Enter the address, then drag the box over the text that should be clickable in the PDF'); }
+      else if (tool === 'sig') {
+        const sigs = loadSigs();
+        if (!sigs.length) { SigPad.open((sig) => this.insertSig(sig)); return; }
+        this.insertSig(sigs[0]);
+      }
+    },
+    async insertSig(sig) {
+      try { await sigImage(sig.dataUrl); } catch (e) { toast('Could not load that signature'); return; }
+      const W = this.base.width, H = this.base.height, w = 0.34, h = w * W * sig.h / sig.w / H;
+      const a = { id: uid(), type: 'sig', dataUrl: sig.dataUrl, sigId: sig.id, x: 0.55, y: Math.min(0.9 - h, 0.78 - h / 2), w, h, rot: 0 };
+      this.annots.push(a); this.select(a); this.hint('Drag into place. Pinch or use Size to resize');
+    },
+    /* ---- selection and panel ---- */
+    select(a) {
+      this.sel = a;
+      if (a) this.showPanel(a.type); else if (this.tool === 'draw') this.showPanel('draw'); else $('edit-panel').classList.add('hidden');
+      this.draw();
+    },
+    showPanel(type) {
+      const panel = $('edit-panel'); panel.classList.remove('hidden');
+      panel.querySelectorAll('.erow').forEach((row) => row.classList.toggle('hidden', !(row.dataset.for || '').split(' ').includes(type)));
+      const a = this.sel;
+      if (type === 'text' && a) { $('ed-text').value = a.text || ''; $('ed-font').value = a.font || 'sans'; $('ed-bold').classList.toggle('on', !!a.bold); this.swatches('ed-colors', COLORS.text, a.color); $('ed-size-label').textContent = 'Size'; $('ed-size').min = 8; $('ed-size').max = 80; $('ed-size').value = Math.round((a.size || 0.022) * 1000); $('ed-size-val').textContent = $('ed-size').value; }
+      if (type === 'link' && a) { $('ed-url').value = a.url || ''; this.rectSliders(a); }
+      if ((type === 'whiteout' || type === 'highlight') && a) { this.swatches('ed-colors2', COLORS[type], a.color); this.rectSliders(a); }
+      if (type === 'sig' && a) { $('ed-size-label').textContent = 'Size'; $('ed-size').min = 5; $('ed-size').max = 100; $('ed-size').value = Math.round(a.w * 100); $('ed-size-val').textContent = $('ed-size').value + '%'; this.renderSigList(); }
+      if (type === 'draw') { this.swatches('ed-colors2', COLORS.draw, this.drawColor); $('ed-size-label').textContent = 'Pen'; $('ed-size').min = 1; $('ed-size').max = 40; $('ed-size').value = Math.round(this.drawWidth * 2000); $('ed-size-val').textContent = $('ed-size').value; }
+      $('ed-delete').textContent = (type === 'draw' && !a) ? 'Undo last stroke' : 'Remove this item';
+    },
+    rectSliders(a) { $('ed-w').value = Math.round(a.w * 100); $('ed-w-val').textContent = Math.round(a.w * 100) + '%'; $('ed-h').value = Math.round(a.h * 100); $('ed-h-val').textContent = Math.round(a.h * 100) + '%'; },
+    swatches(id, colors, current) {
+      const wrap = $(id); wrap.innerHTML = '';
+      for (const c of colors) {
+        const b = document.createElement('button'); b.className = 'swatch' + (c === current ? ' on' : ''); b.title = c === 'paper' ? 'Match paper' : c;
+        b.style.background = c === 'paper' ? 'linear-gradient(135deg,#fff 50%,#e8e2d0 50%)' : c;
+        b.addEventListener('click', () => this.setColor(c)); wrap.appendChild(b);
+      }
+    },
+    setColor(c) {
+      const a = this.sel;
+      if (!a) { if (this.tool === 'draw') { this.drawColor = c; this.showPanel('draw'); } return; }
+      a.color = c;
+      if (c === 'paper' && a.type === 'whiteout') a.paper = this.samplePaper(a);
+      this.showPanel(a.type); this.draw();
+    },
+    samplePaper(a) {
+      const W = this.base.width, H = this.base.height, x0 = clamp(Math.round(a.x * W), 0, W - 1), y0 = clamp(Math.round(a.y * H), 0, H - 1);
+      const w = clamp(Math.round(a.w * W), 1, W - x0), h = clamp(Math.round(a.h * H), 1, H - y0);
+      try {
+        const d = this.base.getContext('2d').getImageData(x0, y0, w, h).data, r = [], g = [], b = [], step = Math.max(1, Math.floor((w * h) / 4000));
+        for (let i = 0; i < w * h; i += step) { r.push(d[i * 4]); g.push(d[i * 4 + 1]); b.push(d[i * 4 + 2]); }
+        const med = (arr) => { arr.sort((p, q) => p - q); return arr[Math.floor(arr.length * 0.6)]; };
+        return 'rgb(' + med(r) + ',' + med(g) + ',' + med(b) + ')';
+      } catch (e) { return '#ffffff'; }
+    },
+    onText(v) { if (this.sel && this.sel.type === 'text') { this.sel.text = v; this.draw(); } },
+    onUrl(v) { if (this.sel && this.sel.type === 'link') this.sel.url = v.trim(); },
+    onFont(v) { if (this.sel && this.sel.type === 'text') { this.sel.font = v; this.draw(); } },
+    toggleBold() { if (this.sel && this.sel.type === 'text') { this.sel.bold = !this.sel.bold; $('ed-bold').classList.toggle('on', this.sel.bold); this.draw(); } },
+    onSize(v) {
+      const a = this.sel;
+      if (!a) { if (this.tool === 'draw') { this.drawWidth = v / 2000; $('ed-size-val').textContent = v; } return; }
+      if (a.type === 'text') { a.size = v / 1000; $('ed-size-val').textContent = v; }
+      else if (a.type === 'sig') { const cx = a.x + a.w / 2, cy = a.y + a.h / 2, W = this.base.width, H = this.base.height; a.w = v / 100; a.h = a.w * W / H * (a.rot % 2 ? 1 : 1) * (this.sigRatio(a)); a.x = cx - a.w / 2; a.y = cy - a.h / 2; $('ed-size-val').textContent = v + '%'; }
+      else if (a.type === 'draw') { a.width = v / 2000; strokeBox(a); $('ed-size-val').textContent = v; }
+      this.draw();
+    },
+    sigRatio(a) { /* height/width of the signature image as placed, accounting for rotation */ const img = sigImgCache.get(a.dataUrl); const r = img ? (img.naturalHeight || img.height) / (img.naturalWidth || img.width) : a.h * this.base.height / (a.w * this.base.width); return (a.rot || 0) % 2 ? 1 / r : r; },
+    onRect(which, v) { const a = this.sel; if (!a) return; if (which === 'w') { a.w = v / 100; $('ed-w-val').textContent = v + '%'; } else { a.h = v / 100; $('ed-h-val').textContent = v + '%'; } this.clampSel(); this.draw(); },
+    clampSel() { const a = this.sel; if (!a) return; a.x = clamp(a.x, -a.w * 0.5, 1 - a.w * 0.5); a.y = clamp(a.y, -a.h * 0.5, 1 - a.h * 0.5); },
+    remove() {
+      if (this.sel) { this.annots = this.annots.filter((x) => x !== this.sel); this.select(null); return; }
+      if (this.tool === 'draw') { for (let i = this.annots.length - 1; i >= 0; i--) if (this.annots[i].type === 'draw') { this.annots.splice(i, 1); break; } this.draw(); }
+    },
+    /* ---- signature library inside the editor ---- */
+    renderSigList() {
+      const list = $('sig-list'); list.innerHTML = '';
+      const sigs = loadSigs(), a = this.sel;
+      for (const sg of sigs) {
+        const b = document.createElement('button'); b.className = 'sig' + (a && a.sigId === sg.id ? ' on' : '');
+        const im = document.createElement('img'); im.src = sg.dataUrl; im.alt = 'Signature'; b.appendChild(im);
+        b.addEventListener('click', async () => { if (a && a.type === 'sig') { try { await sigImage(sg.dataUrl); } catch (e) { return; } a.dataUrl = sg.dataUrl; a.sigId = sg.id; a.h = a.w * this.base.width / this.base.height * (sg.h / sg.w); this.renderSigList(); this.draw(); } });
+        list.appendChild(b);
+      }
+      $('sig-delete').disabled = !sigs.length;
+    },
+    async deleteSig() {
+      const a = this.sel, sigs = loadSigs(); if (!sigs.length) return;
+      const target = a && a.sigId ? sigs.find((x) => x.id === a.sigId) || sigs[0] : sigs[0];
+      if (!await askConfirm('Delete this saved signature? Pages already signed keep it.', 'Delete', true)) return;
+      saveSigs(sigs.filter((x) => x.id !== target.id)); this.renderSigList();
+    },
+    /* ---- pointer handling ---- */
     down(e) {
-      if (!this.rect) return;
       e.preventDefault(); try { this.canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-      this.ptrs.set(e.pointerId, this.pos(e));
-      if (this.ptrs.size === 2) { const [a, b] = Array.from(this.ptrs.values()); this.pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y), w0: this.rect.w }; }
+      const p = this.pos(e); this.ptrs.set(e.pointerId, p);
+      if (this.ptrs.size === 2 && this.sel) { const [a, b] = Array.from(this.ptrs.values()); this.pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y), size: this.sel.size, w: this.sel.w, h: this.sel.h, width: this.sel.width }; return; }
+      if (this.ptrs.size > 1) return;
+      if (this.tool === 'draw') { const r = this.toRel(p); this.stroke = { id: uid(), type: 'draw', color: this.drawColor, width: this.drawWidth, pts: [[r.x, r.y]], x: r.x, y: r.y, w: 0, h: 0 }; strokeBox(this.stroke); this.annots.push(this.stroke); this.draw(); return; }
+      const hit = this.hitTest(p);
+      if (hit !== this.sel) this.select(hit);
     },
     move(e) {
       if (!this.ptrs.has(e.pointerId)) return;
       e.preventDefault();
       const p = this.pos(e), prev = this.ptrs.get(e.pointerId); this.ptrs.set(e.pointerId, p);
+      if (this.stroke) { const r = this.toRel(p); this.stroke.pts.push([r.x, r.y]); strokeBox(this.stroke); this.draw(); return; }
+      const a = this.sel; if (!a) return;
       if (this.ptrs.size >= 2 && this.pinch) {
-        const [a, b] = Array.from(this.ptrs.values()), d = Math.hypot(a.x - b.x, a.y - b.y), r = this.rect, cx = r.x + r.w / 2, cy = r.y + r.h / 2;
-        r.w = this.pinch.w0 * (d / Math.max(1, this.pinch.d0)); r.h = r.w * this.sig.h / this.sig.w; r.x = cx - r.w / 2; r.y = cy - r.h / 2; this.clampRect(); this.syncSlider();
-      } else { this.rect.x += (p.x - prev.x) / this.scale; this.rect.y += (p.y - prev.y) / this.scale; this.clampRect(); }
-      this.draw();
+        const [q1, q2] = Array.from(this.ptrs.values()), f = Math.hypot(q1.x - q2.x, q1.y - q2.y) / Math.max(1, this.pinch.d0), cx = a.x + a.w / 2, cy = a.y + a.h / 2;
+        if (a.type === 'text') a.size = clamp(this.pinch.size * f, 0.006, 0.12);
+        else if (a.type === 'draw') { a.width = clamp(this.pinch.width * f, 0.0005, 0.03); strokeBox(a); }
+        else { a.w = clamp(this.pinch.w * f, 0.02, 1); a.h = clamp(this.pinch.h * f, 0.005, 1); a.x = cx - a.w / 2; a.y = cy - a.h / 2; }
+        this.clampSel(); this.draw(); return;
+      }
+      const dx = (p.x - prev.x) / this.scale / this.base.width, dy = (p.y - prev.y) / this.scale / this.base.height;
+      a.x += dx; a.y += dy; if (a.pts) a.pts = a.pts.map(([x, y]) => [x + dx, y + dy]);
+      this.clampSel(); this.draw();
     },
-    up(e) { this.ptrs.delete(e.pointerId); if (this.ptrs.size < 2) this.pinch = null; },
-    async apply() {
-      if (!this.sig || !this.rect) { toast('Choose or draw a signature first'); return; }
-      const page = this.page, r = this.rect, iw = this.img.width, ih = this.img.height;
-      overlay('Adding signature…'); await nextFrame();
+    up(e) {
+      this.ptrs.delete(e.pointerId);
+      if (this.ptrs.size < 2) { if (this.pinch && this.sel) this.showPanel(this.sel.type); this.pinch = null; }
+      if (this.stroke && this.ptrs.size === 0) { if (this.stroke.pts.length < 2) this.annots = this.annots.filter((x) => x !== this.stroke); this.stroke = null; this.draw(); }
+    },
+    /* ---- finish ---- */
+    async done() {
+      const page = this.page;
+      overlay('Saving…'); await nextFrame();
       try {
-        page.stamps = (page.stamps || []).concat([{ dataUrl: this.sig.dataUrl, x: r.x / iw, y: r.y / ih, w: r.w / iw, h: r.h / ih }]);
-        const c = this.img; await drawStamps(c, page.stamps.slice(-1));
+        page.annots = this.annots.filter((a) => !(a.type === 'text' && !String(a.text || '').trim()) && !(a.type === 'link' && !(a.url || '').trim()) && !(a.type === 'draw' && (!a.pts || a.pts.length < 2)));
+        const c = this.base; await drawAnnots(c, page.annots);
         page.result = { buf: await canvasToJpegBuf(c, S.jpegQ), w: c.width, h: c.height };
         page.thumb = thumbOf(c, 320);
         await persistPage(page); await persistDoc(); renderGrid();
-        toast('Signature added');
-      } catch (e) { console.error(e); toast('Could not add the signature'); }
+      } catch (e) { console.error(e); toast('Could not save the edits'); }
       hideOverlay(); this.close();
     },
-    close() { this.img = null; this.page = null; this.rect = null; showView('view-pages'); },
-    async deleteSig() {
-      if (!this.sig) return;
-      if (!await askConfirm('Delete this saved signature? Pages already signed keep it.', 'Delete', true)) return;
-      const list = loadSigs().filter((x) => x.id !== this.sig.id); saveSigs(list);
-      this.sig = list[0] || null; this.rect = null; this.renderList(); this.layout();
-    }
+    close() { this.base = null; this.page = null; this.annots = []; this.sel = null; this.tool = null; $('edit-panel').classList.add('hidden'); showView('view-pages'); }
   };
 
   /* ---------- library ---------- */
@@ -2571,7 +2653,6 @@ if (typeof module !== 'undefined') module.exports = IP;
     sel.value = S.defaultMode;
     $('set-trim').value = String(S.trim);
     $('set-review').checked = !!S.reviewSingle;
-    $('set-autocap').checked = !!S.autoCapture;
     $('set-edges').checked = S.cleanEdges !== false;
     $('set-theme').value = S.theme;
     openModal('modal-settings');
@@ -2581,7 +2662,6 @@ if (typeof module !== 'undefined') module.exports = IP;
     $('set-mode').addEventListener('change', (e) => { S.defaultMode = e.target.value; saveSettings(); });
     $('set-trim').addEventListener('change', (e) => { S.trim = Number(e.target.value) || 0; saveSettings(); });
     $('set-review').addEventListener('change', (e) => { S.reviewSingle = e.target.checked; saveSettings(); });
-    $('set-autocap').addEventListener('change', (e) => { S.autoCapture = e.target.checked; saveSettings(); });
     $('set-edges').addEventListener('change', (e) => { S.cleanEdges = e.target.checked; saveSettings(); });
     $('set-theme').addEventListener('change', (e) => { S.theme = e.target.value; saveSettings(); applyTheme(); });
     $('set-close').addEventListener('click', () => closeModal('modal-settings'));
@@ -2600,7 +2680,6 @@ if (typeof module !== 'undefined') module.exports = IP;
     $('btn-photos').addEventListener('click', () => { const f = $('file-photos'); f.value = ''; f.click(); });
     $('file-camera').addEventListener('change', (e) => { importFiles(e.target.files, true); });
     $('file-photos').addEventListener('change', (e) => { importFiles(e.target.files, true); });
-    $('btn-live').addEventListener('click', () => Live.open());
     $('btn-export').addEventListener('click', openExport);
     $('btn-library').addEventListener('click', openLibrary);
     $('btn-settings').addEventListener('click', openSettings);
@@ -2631,29 +2710,32 @@ if (typeof module !== 'undefined') module.exports = IP;
     $('rot-l').addEventListener('click', () => Filter.rotate(-1));
     $('rot-r').addEventListener('click', () => Filter.rotate(1));
 
-    // live
-    $('live-close').addEventListener('click', () => Live.close());
-    $('live-shutter').addEventListener('click', () => Live.capture());
-    $('live-torch').addEventListener('click', () => Live.toggleTorch());
-    $('live-auto').addEventListener('change', (e) => { S.autoCapture = e.target.checked; saveSettings(); });
-
     // sheets and modals
     $('sheet-page').querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => { const a = b.dataset.act; if (a === 'close') closeModal('sheet-page'); else pageAction(a); }));
     $('viewer-close').addEventListener('click', () => Viewer.close());
     $('viewer-prev').addEventListener('click', () => Viewer.step(-1));
     $('viewer-next').addEventListener('click', () => Viewer.step(1));
     $('viewer-enhance').addEventListener('click', () => { const i = Viewer.index; Viewer.close(); if (pages[i]) Filter.open(pages[i], false); });
-    $('viewer-sign').addEventListener('click', () => { const i = Viewer.index; Viewer.close(); if (pages[i]) Sign.open(pages[i]); });
+    $('viewer-edit').addEventListener('click', () => { const i = Viewer.index; Viewer.close(); if (pages[i]) Edit.open(pages[i]); });
     $('viewer-stage').addEventListener('click', (e) => { if (e.target === e.currentTarget) Viewer.close(); });
-    // sign
-    const sgc = $('sign-canvas');
-    sgc.addEventListener('pointerdown', (e) => Sign.down(e)); sgc.addEventListener('pointermove', (e) => Sign.move(e));
-    sgc.addEventListener('pointerup', (e) => Sign.up(e)); sgc.addEventListener('pointercancel', (e) => Sign.up(e));
-    $('sign-cancel').addEventListener('click', () => Sign.close());
-    $('sign-apply').addEventListener('click', () => Sign.apply());
-    $('sign-size').addEventListener('input', (e) => Sign.setSize(Number(e.target.value)));
-    $('sig-new').addEventListener('click', () => SigPad.open((sig) => { Sign.sig = sig; Sign.rect = null; Sign.renderList(); Sign.layout(); }));
-    $('sig-delete').addEventListener('click', () => Sign.deleteSig());
+    // editor
+    const ec = $('edit-canvas');
+    ec.addEventListener('pointerdown', (e) => Edit.down(e)); ec.addEventListener('pointermove', (e) => Edit.move(e));
+    ec.addEventListener('pointerup', (e) => Edit.up(e)); ec.addEventListener('pointercancel', (e) => Edit.up(e));
+    $('edit-cancel').addEventListener('click', () => Edit.close());
+    $('edit-done').addEventListener('click', () => Edit.done());
+    document.querySelectorAll('#edit-tools [data-tool]').forEach((b) => b.addEventListener('click', () => Edit.setTool(b.dataset.tool)));
+    $('ed-text').addEventListener('input', (e) => Edit.onText(e.target.value));
+    $('ed-url').addEventListener('input', (e) => Edit.onUrl(e.target.value));
+    $('ed-font').addEventListener('change', (e) => Edit.onFont(e.target.value));
+    $('ed-bold').addEventListener('click', () => Edit.toggleBold());
+    $('ed-size').addEventListener('input', (e) => Edit.onSize(Number(e.target.value)));
+    $('ed-w').addEventListener('input', (e) => Edit.onRect('w', Number(e.target.value)));
+    $('ed-h').addEventListener('input', (e) => Edit.onRect('h', Number(e.target.value)));
+    $('ed-delete').addEventListener('click', () => Edit.remove());
+    $('ed-deselect').addEventListener('click', () => Edit.select(null));
+    $('sig-new').addEventListener('click', () => SigPad.open(async (sig) => { const a = Edit.sel; if (a && a.type === 'sig') { try { await sigImage(sig.dataUrl); } catch (e) { return; } a.dataUrl = sig.dataUrl; a.sigId = sig.id; a.h = a.w * Edit.base.width / Edit.base.height * (sig.h / sig.w); Edit.renderSigList(); Edit.draw(); } else Edit.insertSig(sig); }));
+    $('sig-delete').addEventListener('click', () => Edit.deleteSig());
     const pad = $('sig-pad');
     pad.addEventListener('pointerdown', (e) => SigPad.down(e)); pad.addEventListener('pointermove', (e) => SigPad.move(e));
     pad.addEventListener('pointerup', (e) => SigPad.up(e)); pad.addEventListener('pointercancel', (e) => SigPad.up(e));
@@ -2672,10 +2754,9 @@ if (typeof module !== 'undefined') module.exports = IP;
     document.querySelectorAll('.modal').forEach((m) => { if (m.id !== 'modal-sig') m.addEventListener('click', (e) => { if (e.target === m) m.classList.add('hidden'); }); });
     bindSettings();
 
-    const relayout = () => { Crop.page && Crop.layout(); Filter.draw(); if (Live.running) Live.layout(); if (Sign.img) Sign.layout(); if (!$('modal-sig').classList.contains('hidden')) SigPad.layout(); };
+    const relayout = () => { Crop.page && Crop.layout(); Filter.draw(); if (Edit.base) Edit.layout(); if (!$('modal-sig').classList.contains('hidden')) SigPad.layout(); };
     window.addEventListener('resize', relayout);
     if (window.visualViewport) window.visualViewport.addEventListener('resize', relayout);
-    document.addEventListener('visibilitychange', () => { if (document.hidden && Live.running) Live.close(); });
   }
 
   /* ---------- init ---------- */
